@@ -784,76 +784,76 @@ const DUTIES = [
   {l:'高年級導師（任滿兩年）',
    c:'①班級導師', p:3,
    note:'任滿兩年加3分，用過即另起計。由導師提出後啟用，資料後備註。'},
-  {l:'接任六年級導師（任滿一年）',
-   c:'①班級導師', p:2,
-   note:'加2分，且不受當年度使用完畢之限制，可累計（如任兩年則加4分）。'},
+  {l:'接任六年級導師（每滿一年 +2，可累計）',
+   c:'①班級導師', p:0, variable:true, vMin:2, vMax:10, vStep:2,
+   note:'每滿一年加2分，且不受當年度使用完畢之限制，可累計。請依審查結果填入 2、4、6、8 或 10 分。'},
 
   // ② 行政職務
   {l:'學年主任（任滿一年）',
    c:'②行政職務', p:3,
    note:'學年主任任滿1年加3分。'},
-  {l:'組長卸任（每任期年）',
-   c:'②行政職務', p:3,
-   note:'任期內每年加3分，上限10分。'},
+  {l:'組長卸任（每任期年 +3，上限10）',
+   c:'②行政職務', p:0, variable:true, vMin:3, vMax:10, vStep:1,
+   note:'任期內每年加3分，上限10分。請依審查結果填入 3、6、9 或 10 分。'},
 
   // ③ 帶隊團隊加分（115.05.13 加分表所列各隊）
   // 計分規則：每40分鐘為1節；平均每週1節＋1分、每週2節＋2分；個人各隊合計上限5分
   {l:'帶隊─弦樂團',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─管樂團',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─太鼓隊',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─田徑隊',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─手球隊',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─班級樂樂棒球',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─大會舞',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─英語歌謠',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─讀者劇場',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─國語演說',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─國語朗讀',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─國語字音字形（國字）',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─作文',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─寫字',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─閩南語演說',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─閩南語朗讀',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─閩南語字音字形（閩字）',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─運動會英語口號推動／賽事主持',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
   {l:'帶隊─其他團隊（未列項目請填備註）',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5, capGroup:'team',
    note:'請於備註欄說明團隊名稱。每週練習節數計分：每週1節＋1分、每週2節＋2分，個人各隊總計上限5分。'},
 
   // ④ 委員會
@@ -886,8 +886,8 @@ const DUTIES = [
 
   // ⑨ 輔導職務
   {l:'認輔教師（完成認輔紀錄）',
-   c:'⑨輔導職務', p:3,
-   note:'113學年度擔任認輔教師並完成認輔紀錄者，於114學年度（115年5月）辦理加分，加3分。依113.2.21校務會議通過。'},
+   c:'⑨輔導職務', p:0, variable:true, vMin:1.5, vMax:3, vStep:1.5,
+   note:'113學年度擔任認輔教師並完成認輔紀錄者，於114學年度（115年5月）辦理加分。請依審查結果填入 1.5 或 3 分。'},
 
   // ⑪ 教師組織
   {l:'教師會文書與會計',
@@ -921,11 +921,11 @@ const DUTIES = [
 
   // ⑯ 特教相關
   {l:'普通班導師輔導特殊生（鑑定，滿一學年）',
-   c:'⑯特教相關', p:1,
-   note:'普通班導師輔導經鑑輔會鑑定之特殊生，依法參與IEP擬定與執行，服務優良有輔導紀錄可查，滿一學年加1分。依112.6.28校務會議修正，統一於隔年職編加分前辦理。'},
+   c:'⑯特教相關', p:0, variable:true, vMin:1, vMax:5, vStep:1,
+   note:'普通班導師輔導經鑑輔會鑑定之特殊生，滿一學年每名加1分。請依審查結果填入實際積分。'},
   {l:'普通班導師輔導特殊生（學期中轉入或鑑定，滿一學期未滿一學年）',
-   c:'⑯特教相關', p:0.5,
-   note:'學期中收受具特教資格轉學生，或學期中經鑑輔會鑑定之特教生，於該班級就讀滿一學期以上但未滿一學年，加0.5分。'},
+   c:'⑯特教相關', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+   note:'學期中收受具特教資格轉學生，或學期中經鑑輔會鑑定之特教生，滿一學期以上但未滿一學年，每名加0.5分。請依審查結果填入實際積分。'},
 
   // ⑳ 童軍課程
   {l:'童軍授課教師（任滿一學年）',
@@ -935,6 +935,10 @@ const DUTIES = [
    c:'⑳童軍課程', p:0, variable:true, vMin:0.5, vMax:2, vStep:0.5,
    note:'帶隊參加校外辦理之童軍集會、露營活動，每參加1天額外加0.5分，至多加2分。請填入對應積分（0.5 / 1 / 1.5 / 2）。'},
 ];
+
+function formatDutyRange(d) {
+  return '+' + (d.vMin ?? 0) + '~' + d.vMax + '分';
+}
 
 function buildDropdowns() {
   const cats = [...new Set(DUTIES.map(d => d.c))];
@@ -948,7 +952,7 @@ function buildDropdowns() {
         const o = document.createElement('option');
         o.value = d.l;
         o.textContent = d.variable
-          ? d.l + '（自填積分）'
+          ? d.l + '（自填' + formatDutyRange(d) + '）'
           : d.l + '（+' + d.p + '分）';
         og.appendChild(o);
       });
@@ -977,7 +981,7 @@ function buildRefTable() {
     r.insertCell().textContent = d.l;
     const ptsTd = r.insertCell();
     ptsTd.style.cssText = 'text-align:center;font-weight:700;color:var(--t600)';
-    ptsTd.textContent = d.variable ? '+0.5~' + d.vMax : '+' + d.p;
+    ptsTd.textContent = d.variable ? formatDutyRange(d) : '+' + d.p;
     const noteTd = r.insertCell();
     noteTd.style.cssText = 'font-size:11px;color:var(--g600);line-height:1.5';
     noteTd.textContent = d.note || '';
@@ -993,6 +997,23 @@ function toggleRef() {
     : '📋 展開「擔任特定職務加分附表」';
 }
 
+const DUTY_CAPS = {
+  team: { label:'帶隊團隊', max:5 }
+};
+
+const DUTY_SELECT_IDS = ['f-d1','f-d2','f-d3','f-d4','f-d5','f-d6'];
+
+function roundDutyPts(value) {
+  return Math.round((value + Number.EPSILON) * 10) / 10;
+}
+
+function clampDutyPts(d, value) {
+  if (!d || !d.variable || !value) return value || 0;
+  const min = d.vMin ?? 0;
+  const max = d.vMax ?? value;
+  return roundDutyPts(Math.min(Math.max(value, min), max));
+}
+
 // ─── 取得職務積分（支援自填型） ─────────────────────────
 function getDutyPts(selId) {
   const sel = document.getElementById(selId);
@@ -1002,14 +1023,43 @@ function getDutyPts(selId) {
   if (d.variable) {
     const idx = selId.replace('f-d','');
     const v = parseFloat(document.getElementById('vs' + idx).value) || 0;
-    return Math.min(Math.max(0, v), d.vMax);
+    return clampDutyPts(d, v);
   }
   return d.p;
 }
 
+function dutyBreakdown() {
+  const items = DUTY_SELECT_IDS.map(id => {
+    const sel = document.getElementById(id);
+    const d = sel.value ? DUTIES.find(x => x.l === sel.value) : null;
+    return d ? { id, duty:d, pts:getDutyPts(id) } : null;
+  }).filter(Boolean);
+
+  const groupTotals = {};
+  let total = 0;
+
+  items.forEach(item => {
+    const group = item.duty.capGroup;
+    if (group && DUTY_CAPS[group]) {
+      groupTotals[group] = (groupTotals[group] || 0) + item.pts;
+    } else {
+      total += item.pts;
+    }
+  });
+
+  const caps = [];
+  Object.entries(groupTotals).forEach(([group, raw]) => {
+    const cap = DUTY_CAPS[group];
+    const capped = Math.min(raw, cap.max);
+    total += capped;
+    if (raw > capped) caps.push({ label:cap.label, raw, capped });
+  });
+
+  return { items, caps, total:roundDutyPts(total) };
+}
+
 function dutyTotal() {
-  return getDutyPts('f-d1') + getDutyPts('f-d2') + getDutyPts('f-d3') +
-         getDutyPts('f-d4') + getDutyPts('f-d5') + getDutyPts('f-d6');
+  return dutyBreakdown().total;
 }
 
 function calcDuty() {
@@ -1041,11 +1091,15 @@ function calcDuty() {
     el.className = 'duty-pts' + (pts ? '' : ' z');
   });
 
-  const parts = ['f-d1','f-d2','f-d3','f-d4','f-d5','f-d6'].map(id => {
+  const bd = dutyBreakdown();
+  const parts = DUTY_SELECT_IDS.map(id => {
     const v = document.getElementById(id).value;
     const p = getDutyPts(id);
     return v ? '• ' + v + '（+' + p + '分）' : '';
   }).filter(Boolean);
+  bd.caps.forEach(cap => {
+    parts.push('※ ' + cap.label + '合計 ' + roundDutyPts(cap.raw) + ' 分，依規定採計上限 ' + cap.capped + ' 分');
+  });
   const disp = document.getElementById('duty-disp');
   disp.innerHTML = parts.length
     ? parts.map(p => '<div style="margin-bottom:3px;color:var(--g800)">' + p + '</div>').join('')
@@ -1380,7 +1434,7 @@ function reviewerBox(s, field, label) {
   var inner  = val
     ? '<div class="reviewer-locked-name">👤 ' + val + '</div><div class="reviewer-locked-hint">已鎖定，無法更改</div>'
     : '<input class="reviewer-input" id="' + field + '-' + id + '" type="text" placeholder="' + label + '者姓名" maxlength="10">'
-      + '<button class="reviewer-save" onclick="saveReviewer(' + id + ','' + field + '')">確認儲存</button>';
+      + '<button class="reviewer-save" onclick="saveReviewer(' + id + ',\'' + field + '\')">確認儲存</button>';
   return '<div class="reviewer-box ' + locked + '">'
        +   '<div class="reviewer-label">' + label + badge + '</div>'
        +   inner
@@ -1400,8 +1454,7 @@ async function saveReviewer(id, field) {
   if (!inputEl) return;
   const name = inputEl.value.trim();
   if (!name) { alert('請輸入' + (field==='r1' ? '初審' : '複審') + '者姓名'); return; }
-  if (!confirm('確認以「' + name + '」儲存為' + (field==='r1' ? '初審' : '複審') + '者？
-儲存後無法修改。')) return;
+  if (!confirm('確認以「' + name + '」儲存為' + (field==='r1' ? '初審' : '複審') + '者？\n儲存後無法修改。')) return;
 
   // 先確認資料庫中該欄位尚未填寫（防止 race condition）
   const subs = await sGet();

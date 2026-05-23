@@ -793,10 +793,27 @@ const DUTIES = [
    c:'②行政職務', p:3,
    note:'學年主任任滿1年加3分。'},
 
-  // ③ 團隊加分
-  {l:'帶隊課外團隊',
-   c:'③帶隊團隊', p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
-   note:'由行政處室或帶隊老師提出訓練計畫並執行。每40分鐘為1節，平均每週1節加1分、每週2節加2分。每人可參加多個團隊，最高總計5分。'},
+  // ③ 團隊加分（依 115.05.13 加分表列出各隊）
+  // 每隊計分：每40分鐘1節；平均每週1節+1分、每週2節+2分；個人各隊合計上限5分
+  {l:'帶隊─弦樂團',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─管樂團',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─太鼓隊',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─田徑隊',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─手球隊',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─班級樂樂棒球',    c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─大會舞',          c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─英語歌謠',        c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─讀者劇場',        c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─國語演講',        c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─國語朗讀',        c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─國語文字音字形',  c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─作文',            c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─寫字',            c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─閩南語演講',      c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─閩南語朗讀',      c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─閩南語字音字形',  c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─運動會英語口號/賽事主持', c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'每週節數對應積分，最高5分。'},
+  {l:'帶隊─其他團隊（未列項目）',    c:'③帶隊團隊', p:0, variable:true, vMin:0, vMax:5, vStep:0.5, note:'請於備註說明團隊名稱。每週節數對應積分，最高5分。'},
 
   // ④ 考核委員
   {l:'考核委員（出席≥2/3）',

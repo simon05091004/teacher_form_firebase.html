@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>永福國小 — QR Code 產生器</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:#2c2c2a;min-height:100vh}
+
+/* ── 工具欄 ── */
+.tool-bar{background:#0f6e56;color:#fff;padding:0;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.tb-inner{max-width:960px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tb-inner h1{font-size:15px;font-weight:700;white-space:nowrap}
+.url-input{flex:1;min-width:260px;padding:9px 13px;border:1px solid rgba(255,255,255,.3);border-radius:9px;
+  font-size:13px;font-family:inherit;background:rgba(255,255,255,.12);color:#fff;outline:none;
+  transition:border-color .2s}
+.url-input::placeholder{color:rgba(255,255,255,.5)}
+.url-input:focus{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.18)}
+.gen-btn{padding:9px 22px;background:#fff;color:#0f6e56;border:none;border-radius:9px;
+  font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;
+  transition:all .2s}
+.gen-btn:hover{background:#e1f5ee}
+.print-btn{padding:9px 18px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);
+  border-radius:9px;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .2s}
+.print-btn:hover{background:rgba(255,255,255,.25)}
+.dl-btn{padding:9px 18px;background:#085041;color:#fff;border:none;border-radius:9px;
+  font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .2s}
+.dl-btn:hover{background:#04342c}
+
+/* ── 說明 ── */
+.guide{max-width:960px;margin:20px auto 0;padding:0 16px}
+.guide-card{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:18px 22px;display:flex;gap:16px;align-items:flex-start}
+.step{width:26px;height:26px;border-radius:50%;background:#0f6e56;color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.guide-text h3{font-size:13px;font-weight:700;margin-bottom:6px;color:#0f6e56}
+.guide-text p{font-size:12px;color:#5f5e5a;line-height:1.6}
+.guide-text code{background:#f7f6f3;padding:2px 6px;border-radius:4px;font-size:11px;color:#085041;font-family:monospace}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:960px;margin:12px auto 20px;padding:0 16px}
+
+/* ── 海報預覽區 ── */
+.preview-wrap{max-width:960px;margin:0 auto;padding:0 16px 40px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+
+/* ── 海報本體（A4 比例）── */
+.poster{
+  background:#fff;
+  width:520px;
+  min-height:700px;
+  border-radius:16px;
+  border:1px solid #d3d1c7;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+}
+.poster-top{
+  background:linear-gradient(135deg,#0f6e56 0%,#1d9e75 100%);
+  padding:28px 32px 24px;
+  color:#fff;
+  text-align:center;
+}
+.poster-school{font-size:13px;font-weight:500;opacity:.85;letter-spacing:2px;margin-bottom:6px}
+.poster-title{font-size:22px;font-weight:900;letter-spacing:1px;line-height:1.3;margin-bottom:4px}
+.poster-sub{font-size:12px;opacity:.75;margin-top:6px}
+
+.poster-mid{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px 32px;gap:18px;
+}
+.qr-frame{
+  background:#fff;border:3px solid #0f6e56;border-radius:16px;
+  padding:16px;
+  box-shadow:0 4px 20px rgba(15,110,86,.12);
+  position:relative;
+}
+.qr-corner{
+  position:absolute;width:20px;height:20px;border-color:#1d9e75;border-style:solid;
+}
+.qr-corner.tl{top:-2px;left:-2px;border-width:4px 0 0 4px;border-radius:4px 0 0 4px}
+.qr-corner.tr{top:-2px;right:-2px;border-width:4px 4px 0 0;border-radius:0 4px 0 0}
+.qr-corner.bl{bottom:-2px;left:-2px;border-width:0 0 4px 4px;border-radius:0 0 0 4px}
+.qr-corner.br{bottom:-2px;right:-2px;border-width:0 4px 4px 0;border-radius:0 0 4px 0}
+
+#qr-placeholder{
+  width:200px;height:200px;background:#f7f6f3;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#888780;font-size:12px;text-align:center;gap:8px;
+}
+.qr-icon{font-size:40px;opacity:.4}
+
+.scan-label{
+  display:flex;align-items:center;gap:8px;
+  background:#e1f5ee;border-radius:10px;padding:10px 16px;
+}
+.scan-icon{font-size:24px}
+.scan-text h3{font-size:15px;font-weight:700;color:#085041;margin-bottom:2px}
+.scan-text p{font-size:11px;color:#0f6e56}
+
+.steps-mini{width:100%;display:flex;flex-direction:column;gap:8px}
+.step-mini{display:flex;align-items:center;gap:10px;font-size:12px;color:#444441}
+.step-mini .n{
+  width:22px;height:22px;border-radius:50%;background:#0f6e56;color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.poster-url{
+  background:#f7f6f3;padding:10px 14px;border-radius:8px;
+  font-size:10px;color:#5f5e5a;word-break:break-all;text-align:center;line-height:1.5;
+  width:100%;
+}
+.poster-url strong{color:#0f6e56;font-size:11px}
+
+.poster-bot{
+  background:#085041;padding:12px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.poster-bot-l{color:#9fe1cb;font-size:11px}
+.poster-bot-r{color:rgba(255,255,255,.5);font-size:10px}
+
+/* ── 右欄：說明面板 ── */
+.side-panel{flex:1;min-width:260px;display:flex;flex-direction:column;gap:14px}
+.info-card{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:18px}
+.info-card h3{font-size:13px;font-weight:700;color:#0f6e56;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.info-card p,.info-card li{font-size:12px;color:#5f5e5a;line-height:1.7}
+.info-card ul{padding-left:16px}
+.info-card code{background:#f7f6f3;padding:2px 6px;border-radius:4px;font-size:11px;color:#085041;font-family:monospace}
+
+.size-btns{display:flex;gap:6px;margin-top:8px}
+.sz-btn{padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;border:1px solid #d3d1c7;
+  background:#fff;color:#5f5e5a;font-family:inherit;transition:all .2s}
+.sz-btn.on{background:#0f6e56;color:#fff;border-color:#0f6e56}
+
+/* ── 列印樣式 ── */
+@media print{
+  .tool-bar,.steps-row,.side-panel,.guide{display:none!important}
+  .preview-wrap{padding:0;margin:0}
+  .poster{
+    width:100%;border:none;border-radius:0;box-shadow:none;
+    page-break-inside:avoid;
+  }
+  body{background:#fff}
+}
+
+/* ── 版型選擇 ── */
+.poster.compact .poster-mid{padding:16px 24px;gap:12px}
+.poster.compact .poster-title{font-size:18px}
+.poster.compact .poster-top{padding:20px 24px 18px}
+</style>
+</head>
+<body>
+
+<!-- 工具欄 -->
+<div class="tool-bar">
+  <div class="tb-inner">
+    <h1>🔲 QR Code 海報產生器</h1>
+    <input class="url-input" id="url-in" type="url"
+      placeholder="貼上填報系統網址，例如 https://yongfu-115.web.app"
+      oninput="onUrlChange()" onpaste="setTimeout(generateQR,100)">
+    <button class="gen-btn" onclick="generateQR()">產生 QR Code</button>
+    <button class="print-btn" onclick="window.print()">🖨 列印 / 存 PDF</button>
+    <button class="dl-btn" onclick="downloadPNG()">⬇ 下載 PNG</button>
+  </div>
+</div>
+
+<!-- 步驟說明 -->
+<div class="steps-row">
+  <div class="guide-card">
+    <div class="step">1</div>
+    <div class="guide-text">
+      <h3>部署填報系統</h3>
+      <p>將 <code>teacher_form_firebase.html</code> 上傳至 Netlify / Firebase Hosting，取得公開網址</p>
+    </div>
+  </div>
+  <div class="guide-card">
+    <div class="step">2</div>
+    <div class="guide-text">
+      <h3>貼上網址產生 QR</h3>
+      <p>將網址貼入上方輸入框，按「產生 QR Code」，海報即時預覽</p>
+    </div>
+  </div>
+  <div class="guide-card">
+    <div class="step">3</div>
+    <div class="guide-text">
+      <h3>列印張貼或分享</h3>
+      <p>列印後張貼於公佈欄，或截圖傳入班級群組。老師用手機掃碼直接填報</p>
+    </div>
+  </div>
+</div>
+
+<!-- 主內容 -->
+<div class="preview-wrap">
+
+  <!-- 海報 -->
+  <div class="poster" id="poster">
+    <div class="poster-top">
+      <div class="poster-school" id="p-school">永福國小</div>
+      <div class="poster-title" id="p-title">115 學年度教師課職務<br>志願選填積分系統</div>
+      <div class="poster-sub">掃描 QR Code，用手機或平板直接填報</div>
+    </div>
+
+    <div class="poster-mid">
+      <div class="qr-frame" id="qr-frame">
+        <div class="qr-corner tl"></div>
+        <div class="qr-corner tr"></div>
+        <div class="qr-corner bl"></div>
+        <div class="qr-corner br"></div>
+        <div id="qr-placeholder">
+          <div class="qr-icon">⬛</div>
+          <div>請在上方輸入框貼上<br>填報系統網址</div>
+        </div>
+        <canvas id="qr-canvas" style="display:none;border-radius:8px"></canvas>
+      </div>
+
+      <div class="scan-label">
+        <div class="scan-icon">📱</div>
+        <div class="scan-text">
+          <h3>開啟手機相機，對準 QR Code 掃描</h3>
+          <p>iOS / Android 原生相機均支援，無需額外 App</p>
+        </div>
+      </div>
+
+      <div class="steps-mini">
+        <div class="step-mini"><div class="n">1</div>手機開啟相機，對準 QR Code</div>
+        <div class="step-mini"><div class="n">2</div>點擊跳出的網址通知</div>
+        <div class="step-mini"><div class="n">3</div>填寫資料，系統自動計分，送出即完成</div>
+      </div>
+
+      <div class="poster-url" id="p-url">
+        <strong>📎 也可直接輸入網址：</strong><br>
+        <span id="p-url-text">（產生 QR Code 後顯示）</span>
+      </div>
+    </div>
+
+    <div class="poster-bot">
+      <div class="poster-bot-l">積分採計時間：114.5.11 ～ 115.5.10</div>
+      <div class="poster-bot-r" id="p-date"></div>
+    </div>
+  </div>
+
+  <!-- 右欄說明 -->
+  <div class="side-panel">
+
+    <div class="info-card">
+      <h3>🎨 海報版型</h3>
+      <div class="size-btns">
+        <button class="sz-btn on" onclick="setStyle('normal',this)">標準版</button>
+        <button class="sz-btn" onclick="setStyle('compact',this)">精簡版</button>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>✏️ 自訂文字</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+        <div>
+          <label style="font-size:11px;color:#888780;display:block;margin-bottom:4px">學校名稱</label>
+          <input type="text" value="永福國小" id="edit-school"
+            oninput="document.getElementById('p-school').textContent=this.value"
+            style="width:100%;padding:8px 10px;border:1px solid #d3d1c7;border-radius:7px;font-size:13px;font-family:inherit">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#888780;display:block;margin-bottom:4px">標題</label>
+          <textarea id="edit-title" rows="2"
+            oninput="document.getElementById('p-title').innerHTML=this.value.replace(/\n/g,'<br>')"
+            style="width:100%;padding:8px 10px;border:1px solid #d3d1c7;border-radius:7px;font-size:13px;font-family:inherit;resize:vertical">115 學年度教師課職務
+志願選填積分系統</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>📋 使用說明</h3>
+      <ul>
+        <li>列印時選「A4」、「全頁縮放」</li>
+        <li>建議列印後護貝，張貼於辦公室或公佈欄</li>
+        <li>可截圖後傳入 LINE 群組讓老師直接點擊</li>
+        <li>QR Code 有效期間與填報系統相同</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h3>📱 手機相容性</h3>
+      <ul>
+        <li><strong>iPhone</strong>：iOS 11+ 原生相機即可掃描</li>
+        <li><strong>Android</strong>：Android 9+ 原生相機支援</li>
+        <li>填報頁面已針對手機優化（字體大、按鈕寬）</li>
+        <li>建議用 WiFi 填報，避免消耗行動數據</li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="background:#e1f5ee;border-color:#9fe1cb">
+      <h3 style="color:#085041">💡 小提醒</h3>
+      <p>填報網址建議測試過再列印。用手機掃 QR 後，確認能正常開啟填報頁，再大量列印張貼。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- qrcode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// 更新日期
+document.getElementById('p-date').textContent =
+  '列印時間：' + new Date().toLocaleDateString('zh-TW');
+
+let qrInstance = null;
+let lastUrl = '';
+
+function onUrlChange() {
+  // 即時預覽（去抖動）
+  clearTimeout(window._qrTimer);
+  window._qrTimer = setTimeout(generateQR, 600);
+}
+
+function generateQR() {
+  const url = document.getElementById('url-in').value.trim();
+  if (!url || url === lastUrl) return;
+  if (!url.startsWith('http')) {
+    alert('請輸入完整網址（以 https:// 開頭）');
+    return;
+  }
+  lastUrl = url;
+
+  const ph = document.getElementById('qr-placeholder');
+  const canvas = document.getElementById('qr-canvas');
+  const urlBox = document.getElementById('p-url-text');
+
+  ph.style.display = 'none';
+  canvas.style.display = 'none';
+
+  // 清除舊 QR
+  const container = document.getElementById('qr-frame');
+  const oldQR = container.querySelector('.qrcode-img');
+  if (oldQR) oldQR.remove();
+
+  // 產生新 QR
+  const div = document.createElement('div');
+  div.className = 'qrcode-img';
+  container.appendChild(div);
+
+  new QRCode(div, {
+    text: url,
+    width: 200,
+    height: 200,
+    colorDark: '#085041',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  // 設定圓角
+  setTimeout(() => {
+    const img = div.querySelector('img') || div.querySelector('canvas');
+    if (img) {
+      img.style.borderRadius = '8px';
+      img.style.display = 'block';
+    }
+  }, 100);
+
+  // 更新網址顯示
+  urlBox.textContent = url.length > 50 ? url.slice(0, 47) + '…' : url;
+}
+
+function setStyle(mode, btn) {
+  const poster = document.getElementById('poster');
+  poster.className = 'poster' + (mode === 'compact' ? ' compact' : '');
+  document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function downloadPNG() {
+  const url = document.getElementById('url-in').value.trim();
+  if (!url) { alert('請先輸入網址並產生 QR Code'); return; }
+
+  // 從 QRCode 找到產生的 img
+  const qrImg = document.querySelector('.qrcode-img img');
+  if (!qrImg) { alert('請先產生 QR Code'); return; }
+
+  // 在 canvas 上合成海報
+  const W = 800, H = 1100;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+
+  // 漸層背景（上半）
+  const grad = ctx.createLinearGradient(0, 0, W, 300);
+  grad.addColorStop(0, '#0f6e56');
+  grad.addColorStop(1, '#1d9e75');
+  ctx.fillStyle = grad;
+  ctx.roundRect(0, 0, W, 320, [16, 16, 0, 0]);
+  ctx.fill();
+
+  // 白色主體
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 320, W, H - 360);
+
+  // 底部
+  ctx.fillStyle = '#085041';
+  ctx.roundRect(0, H - 60, W, 60, [0, 0, 16, 16]);
+  ctx.fill();
+
+  // 文字：學校名稱
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = '500 22px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(document.getElementById('edit-school').value || '永福國小', W/2, 76);
+
+  // 文字：標題
+  ctx.fillStyle = '#fff';
+  ctx.font = '700 34px "Noto Sans TC", sans-serif';
+  const titleLines = document.getElementById('edit-title').value.split('\n');
+  titleLines.forEach((line, i) => ctx.fillText(line, W/2, 138 + i * 46));
+
+  // 小字
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = '400 18px "Noto Sans TC", sans-serif';
+  ctx.fillText('掃描 QR Code，用手機或平板直接填報', W/2, 286);
+
+  // 貼 QR code
+  const qrSize = 300;
+  const qrX = (W - qrSize) / 2;
+  const qrY = 360;
+
+  // QR 框
+  ctx.strokeStyle = '#0f6e56';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(qrX - 16, qrY - 16, qrSize + 32, qrSize + 32, 16);
+  ctx.stroke();
+
+  // 在 canvas 上渲染新 QR（大尺寸）
+  const tempDiv = document.createElement('div');
+  document.body.appendChild(tempDiv);
+  const tempQR = new QRCode(tempDiv, {
+    text: url, width: qrSize, height: qrSize,
+    colorDark: '#085041', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  setTimeout(() => {
+    const tempImg = tempDiv.querySelector('img');
+    if (tempImg && tempImg.complete) {
+      ctx.drawImage(tempImg, qrX, qrY, qrSize, qrSize);
+    }
+    tempDiv.remove();
+
+    // 手機圖示 & 說明
+    ctx.fillStyle = '#085041';
+    ctx.font = '700 20px "Noto Sans TC", sans-serif';
+    ctx.fillText('📱 開啟手機相機，對準 QR Code 掃描', W/2, qrY + qrSize + 56);
+
+    ctx.fillStyle = '#5f5e5a';
+    ctx.font = '400 16px "Noto Sans TC", sans-serif';
+    const steps = ['1. 手機開啟相機，對準 QR Code', '2. 點擊跳出的網址通知', '3. 填寫資料後送出，即時儲存至雲端'];
+    steps.forEach((s, i) => ctx.fillText(s, W/2, qrY + qrSize + 96 + i * 30));
+
+    // URL 文字
+    ctx.fillStyle = '#888780';
+    ctx.font = '400 14px "Noto Sans TC", sans-serif';
+    ctx.fillText('📎 ' + (url.length > 60 ? url.slice(0, 57) + '…' : url), W/2, qrY + qrSize + 200);
+
+    // 底部文字
+    ctx.fillStyle = '#9fe1cb';
+    ctx.font = '400 15px "Noto Sans TC", sans-serif';
+    ctx.fillText('積分採計時間：114.5.11 ～ 115.5.10', W/2 - 80, H - 24);
+
+    // 下載
+    const a = document.createElement('a');
+    a.href = c.toDataURL('image/png');
+    a.download = '永福國小115積分系統QR海報.png';
+    a.click();
+  }, 300);
+}
+</script>
+</body>
+</html>

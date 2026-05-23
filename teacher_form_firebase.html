@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>永福國小 115 學年度教師課職務志願選填積分系統</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --t50:#e1f5ee;--t100:#9fe1cb;--t200:#5dcaa5;--t400:#1d9e75;--t600:#0f6e56;--t800:#085041;
+  --b50:#e6f1fb;--b200:#85b7eb;--b400:#378add;--b600:#185fa5;--b800:#0c447c;
+  --a50:#faeeda;--a400:#ba7517;--a600:#854f0b;
+  --r50:#fcebeb;--r400:#e24b4a;--r800:#791f1f;
+  --g50:#f7f6f3;--g100:#eeede7;--g200:#d3d1c7;--g400:#888780;--g600:#5f5e5a;--g800:#2c2c2a;
+  --gr50:#eaf3de;--gr400:#639922;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);min-height:100vh;font-size:14px}
+
+/* HEADER */
+#app-header{background:var(--t600);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hdr-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.hdr-title h1{font-size:15px;font-weight:700;padding:14px 0 2px;letter-spacing:.3px}
+.hdr-title p{font-size:11px;opacity:.75;padding-bottom:14px}
+.tab-nav{display:flex;gap:2px}
+.tab-btn{background:transparent;border:none;color:rgba(255,255,255,.7);padding:16px 18px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:500;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab-btn.on{color:#fff;border-bottom-color:var(--t100)}
+
+/* LAYOUT */
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 40px}
+.tab-panel{display:none}.tab-panel.on{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;border:1px solid var(--g200);margin-bottom:14px;overflow:hidden}
+.card-hd{background:var(--g50);border-bottom:1px solid var(--g200);padding:11px 18px;display:flex;align-items:center;gap:10px}
+.sec-badge{width:22px;height:22px;border-radius:50%;background:var(--t400);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.card-hd h2{font-size:13px;font-weight:700;color:var(--t800)}
+.card-hd .sub{font-size:11px;color:var(--g400);margin-left:4px}
+.card-bd{padding:18px}
+
+/* FIELDS */
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:11px;color:var(--g600);font-weight:500}
+.fg input,.fg select,.fg textarea{border:1px solid var(--g200);border-radius:8px;padding:8px 11px;font-size:13px;font-family:inherit;color:var(--g800);background:#fff;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--t400);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.hint{font-size:11px;color:var(--g400);margin-top:3px}
+.cap{font-size:11px;color:var(--a400);margin-top:2px}
+
+/* PREF ROW */
+.pref-row{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.pref-item{flex:1;min-width:140px}
+.pref-num{font-size:11px;font-weight:700;margin-bottom:5px}
+.pref-num.p1{color:var(--t600)}.pref-num.p2{color:var(--b600)}.pref-num.p3{color:var(--a600)}
+
+/* SCORE TABLE */
+.sc-tbl{width:100%;border-collapse:collapse}
+.sc-tbl th{background:var(--g50);font-size:11px;color:var(--g600);font-weight:700;padding:9px 14px;text-align:left;border-bottom:1px solid var(--g200)}
+.sc-tbl th.c,.sc-tbl td.c{text-align:center}
+.sc-tbl td{padding:14px;border-bottom:1px solid var(--g100);vertical-align:top}
+.sc-tbl tr:last-child td{border-bottom:none}
+.sc-tbl tr:hover td{background:var(--g50)}
+.sc-tbl input[type=number]{width:72px;border:1px solid var(--g200);border-radius:7px;padding:6px 8px;font-size:13px;font-family:inherit;text-align:center;transition:border-color .2s}
+.sc-tbl input[type=number]:focus{outline:none;border-color:var(--t400);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.sv{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:32px;border-radius:7px;background:var(--t50);color:var(--t600);font-size:15px;font-weight:700}
+.sv.z{background:var(--g100);color:var(--g400)}
+.yb{display:inline-flex;align-items:center;gap:5px;background:var(--b50);color:var(--b600);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:600;margin-top:6px}
+.yb.empty{background:var(--g100);color:var(--g400)}
+
+/* FILE UPLOAD */
+.file-lbl{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px dashed var(--g200);border-radius:7px;font-size:12px;color:var(--g600);cursor:pointer;margin-top:7px;transition:all .2s}
+.file-lbl:hover{border-color:var(--t400);color:var(--t600);background:var(--t50)}
+.fname{font-size:11px;color:var(--t600);margin-top:4px}
+
+/* DUTY */
+.duty-pts{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--t50);color:var(--t600);margin-top:5px}
+.duty-pts.z{background:var(--g100);color:var(--g400)}
+
+/* REF TABLE */
+.ref-tgl{font-size:12px;color:var(--b600);cursor:pointer;text-decoration:underline;border:none;background:none;font-family:inherit;margin-top:10px;display:block}
+.ref-tbl{display:none;margin-top:10px;width:100%;border-collapse:collapse;font-size:12px}
+.ref-tbl.open{display:table}
+.ref-tbl th{background:var(--g100);padding:6px 10px;text-align:left;border:1px solid var(--g200);font-weight:600;color:var(--g600)}
+.ref-tbl td{padding:5px 10px;border:1px solid var(--g200)}
+.ref-tbl tr:nth-child(even) td{background:var(--g50)}
+.ref-tbl .cat-row td{background:var(--t50)!important;font-weight:700;color:var(--t800);font-size:11px;letter-spacing:.5px}
+
+/* VARIABLE SCORE INPUT */
+.var-wrap{background:var(--b50);border:1px solid var(--b200);border-radius:7px;padding:8px 10px;margin-top:6px}
+.var-wrap.hidden{display:none}
+.var-note{font-size:11px;color:var(--b600);line-height:1.5;margin-bottom:6px}
+.var-row{display:flex;align-items:center;gap:7px}
+.var-row input{width:68px;border:1px solid var(--b200);border-radius:6px;padding:5px 7px;font-size:13px;font-family:inherit;text-align:center;background:#fff}
+.var-row input:focus{outline:none;border-color:var(--b600);box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.var-unit{font-size:12px;color:var(--b600)}
+
+/* TOTAL PANEL */
+.total-panel{background:linear-gradient(135deg,var(--t600),var(--t400));border-radius:12px;padding:22px;color:#fff;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.total-score{font-size:52px;font-weight:700;line-height:1}
+.breakdown{font-size:12px;opacity:.85;line-height:2;text-align:right}
+.breakdown span{display:inline-block;margin-left:10px}
+
+/* SUBMIT */
+.submit-btn{width:100%;padding:13px;background:var(--t600);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:1px;transition:background .2s,transform .1s}
+.submit-btn:hover{background:var(--t800)}
+.submit-btn:active{transform:scale(.99)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:all .3s ease;z-index:999;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.s{background:var(--t600);color:#fff}
+.toast.e{background:#a32d2d;color:#fff}
+
+/* PW MODAL */
+.pw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(3px)}
+.pw-overlay.hidden{display:none}
+.pw-box{background:#fff;border-radius:16px;padding:36px 32px;width:340px;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center}
+.pw-box h3{font-size:17px;font-weight:700;margin:12px 0 5px}
+.pw-box p{font-size:12px;color:var(--g400);margin-bottom:22px}
+.pw-input{width:100%;padding:11px 14px;border:1px solid var(--g200);border-radius:9px;font-size:15px;font-family:inherit;margin-bottom:11px;text-align:center;letter-spacing:3px}
+.pw-input:focus{outline:none;border-color:var(--t400);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.pw-btn{width:100%;padding:11px;background:var(--t600);color:#fff;border:none;border-radius:9px;font-size:14px;font-family:inherit;font-weight:700;cursor:pointer;transition:background .2s}
+.pw-btn:hover{background:var(--t800)}
+.pw-err{font-size:12px;color:var(--r400);margin-top:8px;min-height:18px}
+.pw-cancel{margin-top:12px;font-size:12px;color:var(--g400);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
+
+/* ADMIN */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px}
+.stat-card{background:#fff;border-radius:10px;border:1px solid var(--g200);padding:16px;text-align:center}
+.stat-n{font-size:28px;font-weight:700;color:var(--t600)}
+.stat-l{font-size:11px;color:var(--g400);margin-top:4px}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select{border:1px solid var(--g200);border-radius:8px;padding:7px 11px;font-size:13px;font-family:inherit;flex:1;min-width:120px}
+.flt-btn{padding:7px 14px;background:#fff;border:1px solid var(--g200);border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--g600);transition:all .2s}
+.flt-btn.on{background:var(--t50);border-color:var(--t400);color:var(--t600)}
+.export-btn{padding:7px 14px;background:var(--b600);color:#fff;border:none;border-radius:8px;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;transition:background .2s}
+.export-btn:hover{background:var(--b800)}
+.logout-btn{padding:7px 14px;background:var(--r50);color:var(--r400);border:1px solid #f09595;border-radius:8px;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .2s}
+.logout-btn:hover{background:var(--r400);color:#fff}
+
+/* SUBMISSION CARDS */
+.sub-card{background:#fff;border-radius:10px;border:1px solid var(--g200);margin-bottom:10px;overflow:hidden}
+.sub-hd{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .15s}
+.sub-hd:hover{background:var(--g50)}
+.sub-hd.open{background:var(--g50)}
+.avt{width:36px;height:36px;border-radius:50%;background:var(--t50);color:var(--t600);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.pchip{font-size:11px;padding:2px 8px;border-radius:4px;background:var(--t50);color:var(--t600);font-weight:500}
+.pchip.p2{background:var(--b50);color:var(--b600)}.pchip.p3{background:var(--a50);color:var(--a600)}
+.reviewed-mark{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--t50);color:var(--t600);font-weight:500}
+.score-badge{font-size:20px;font-weight:700;color:var(--t600)}
+.score-badge small{font-size:12px;color:var(--g400);font-weight:400}
+.status-p{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--a50);color:var(--a400);font-weight:500}
+.status-r{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--t50);color:var(--t600);font-weight:500}
+.expand-icon{color:var(--g400);transition:transform .2s;font-size:18px;user-select:none}
+.expand-icon.open{transform:rotate(180deg)}
+.sub-detail{border-top:1px solid var(--g100);padding:16px;display:none;background:#fafaf9}
+.sub-detail.open{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;font-size:12px}
+.detail-item dt{color:var(--g400);margin-bottom:3px}
+.detail-item dd{font-weight:600;color:var(--g800)}
+.score-bd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.score-bd-item{background:#fff;border:1px solid var(--g200);border-radius:8px;padding:10px;text-align:center}
+.score-bd-val{font-size:20px;font-weight:700;color:var(--t600)}
+.score-bd-label{font-size:11px;color:var(--g400);margin-top:2px}
+.note-area{width:100%;border:1px solid var(--g200);border-radius:7px;padding:8px 11px;font-size:12px;font-family:inherit;min-height:60px;resize:vertical;margin-top:8px;display:none}
+.note-area.open{display:block}
+.note-display{margin-top:8px;padding:8px 11px;background:var(--a50);border-radius:7px;font-size:12px;color:var(--a600);display:none}
+.admin-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.action-btn{padding:7px 15px;border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:all .2s}
+.btn-note{background:#fff;border:1px solid var(--g200)!important;color:var(--g600)}
+.btn-note:hover{background:var(--g50)}
+.btn-del{background:var(--r50);color:var(--r400)}
+.btn-del:hover{background:var(--r400);color:#fff}
+.btn-ok{background:var(--t400);color:#fff}
+.btn-ok:hover{background:var(--t600)}
+.empty-state{text-align:center;padding:48px 24px;color:var(--g400)}
+.empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
+
+/* LOADING */
+.loading{text-align:center;padding:30px;color:var(--g400);font-size:13px}
+
+/* ── 手機／平板適配 ── */
+@media(max-width:640px){
+  .g2,.g3{grid-template-columns:1fr}
+  .pref-row{flex-direction:column}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .detail-grid{grid-template-columns:1fr 1fr}
+  .score-bd-grid{grid-template-columns:repeat(3,1fr)}
+  .hdr-inner{flex-direction:column;align-items:flex-start;gap:0}
+  .tab-nav{width:100%}
+  /* 觸控友善：加高點擊區域 */
+  .fg input,.fg select,.fg textarea{padding:12px 13px;font-size:16px!important;min-height:48px}
+  .sc-tbl input[type=number]{width:80px;padding:10px 6px;font-size:16px!important;min-height:44px}
+  .tab-btn{padding:14px 12px;font-size:12px}
+  .submit-btn{padding:17px;font-size:16px;border-radius:14px}
+  /* 防止 iOS 縮放 */
+  select{font-size:16px!important}
+  /* 總分卡更顯眼 */
+  .total-panel{flex-direction:column;gap:12px;text-align:center}
+  .breakdown{text-align:center}
+  .total-score{font-size:64px}
+  /* 積分表在手機上捲動 */
+  .sc-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .wrap{padding:12px 10px 60px}
+  .card-bd{padding:14px}
+  /* 固定送出按鈕在底部 */
+  .bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;
+    border-top:1px solid var(--g200);padding:10px 16px;z-index:40;
+    box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+  #submit-area{display:none} /* 隱藏原有送出區 */
+}
+</style>
+</head>
+<body>
+
+<!-- Password Modal -->
+<div class="pw-overlay hidden" id="pw-overlay">
+  <div class="pw-box">
+    <div style="font-size:34px">🔐</div>
+    <h3>後台審核登入</h3>
+    <p>請輸入後台密碼以進入審核頁面</p>
+    <input type="password" class="pw-input" id="pw-in" placeholder="••••••"
+      onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">確認登入</button>
+    <div class="pw-err" id="pw-err"></div>
+    <button class="pw-cancel" onclick="cancelPw()">取消，返回填報頁</button>
+  </div>
+</div>
+
+<!-- Firebase 設定提示 Banner -->
+<div id="setup-banner" style="background:#faeeda;border-bottom:1px solid #ef9f27;padding:10px 20px;text-align:center;font-size:13px;color:#633806;display:none">
+  ⚠ <strong>尚未設定 Firebase</strong>：請開啟 HTML 原始碼，在 <code>FIREBASE_CONFIG</code> 區填入你的 Firebase 專案設定，再重新上傳。
+  <a href="https://console.firebase.google.com/" target="_blank" style="color:#185fa5;margin-left:8px">→ 前往 Firebase Console</a>
+</div>
+
+<!-- Header -->
+<div id="app-header">
+  <div class="hdr-inner">
+    <div class="hdr-title">
+      <h1>永福國小 115 學年度教師課職務志願選填積分系統</h1>
+      <p>積分採計時間：114.5.11 ～ 115.5.10</p>
+    </div>
+    <nav class="tab-nav" aria-label="頁面切換">
+      <button class="tab-btn on" id="btn-form" onclick="switchTab('form',this)">📋 教師填報</button>
+      <button class="tab-btn" id="btn-admin" onclick="requirePw(this)">🔍 後台審核</button>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══════════════════════════════════════
+       教師填報頁
+  ═══════════════════════════════════════ -->
+  <div id="tab-form" class="tab-panel on">
+
+    <!-- A: 基本資料 -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="sec-badge" aria-hidden="true">A</div>
+        <h2>基本資料</h2>
+      </div>
+      <div class="card-bd">
+        <div class="g2">
+          <div class="fg">
+            <label for="f-name">姓名</label>
+            <input type="text" id="f-name" placeholder="請輸入姓名">
+          </div>
+          <div class="fg">
+            <label for="f-role">現任職務</label>
+            <select id="f-role">
+              <option value="">請選擇</option>
+              <option>教師</option><option>組長</option><option>主任</option><option>科任教師</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>意願選填順序（請依志願優先順序填寫）</label>
+          <div class="pref-row">
+            <div class="pref-item">
+              <div class="pref-num p1">① 第一志願</div>
+              <input type="text" id="f-p1" placeholder="職務名稱" style="width:100%">
+            </div>
+            <div class="pref-item">
+              <div class="pref-num p2">② 第二志願</div>
+              <input type="text" id="f-p2" placeholder="職務名稱" style="width:100%">
+            </div>
+            <div class="pref-item">
+              <div class="pref-num p3">③ 第三志願</div>
+              <input type="text" id="f-p3" placeholder="職務名稱" style="width:100%">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: 專長認定 -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="sec-badge" aria-hidden="true">B</div>
+        <h2>專長認定</h2>
+      </div>
+      <div class="card-bd">
+        <div class="g2" style="margin-bottom:0">
+          <div class="fg">
+            <label for="f-spec">專長認證學歷（科目）</label>
+            <input type="text" id="f-spec" placeholder="如：英語、數學…">
+          </div>
+          <div class="fg">
+            <label for="f-cert">認證方式（PS）</label>
+            <select id="f-cert">
+              <option value="">請選擇</option>
+              <option>學歷認定</option>
+              <option>五年內任教該科目三學年以上</option>
+              <option>擔任校內團隊指導老師三年以上</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint" style="margin-top:8px">
+          ※ 每人之專長認定只有一項。若有雙學位，請影印畢業證書或證明文件備查，選填時只能選一個為職務選填。
+        </p>
+      </div>
+    </div>
+
+    <!-- C: 去年度特定職務 -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="sec-badge" aria-hidden="true">C</div>
+        <h2>去年度擔任特定職務</h2>
+        <span class="sub">（請參閱職編工作加分附表選填，最多六項）</span>
+      </div>
+      <div class="card-bd">
+        <p class="hint" style="margin-bottom:14px">
+          ※ 選填後，D 欄「擔任特定職務加分」將自動累計。可選填最多六項職務。
+        </p>
+        <div class="g3">
+          <div class="fg">
+            <label for="f-d1">職務一</label>
+            <select id="f-d1" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi1"><div class="var-note" id="vn1"></div><div class="var-row"><input type="number" id="vs1" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp1">未選</div>
+          </div>
+          <div class="fg">
+            <label for="f-d2">職務二</label>
+            <select id="f-d2" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi2"><div class="var-note" id="vn2"></div><div class="var-row"><input type="number" id="vs2" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp2">未選</div>
+          </div>
+          <div class="fg">
+            <label for="f-d3">職務三</label>
+            <select id="f-d3" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi3"><div class="var-note" id="vn3"></div><div class="var-row"><input type="number" id="vs3" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp3">未選</div>
+          </div>
+        </div>
+        <div class="g3" style="margin-top:0">
+          <div class="fg">
+            <label for="f-d4">職務四</label>
+            <select id="f-d4" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi4"><div class="var-note" id="vn4"></div><div class="var-row"><input type="number" id="vs4" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp4">未選</div>
+          </div>
+          <div class="fg">
+            <label for="f-d5">職務五</label>
+            <select id="f-d5" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi5"><div class="var-note" id="vn5"></div><div class="var-row"><input type="number" id="vs5" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp5">未選</div>
+          </div>
+          <div class="fg">
+            <label for="f-d6">職務六</label>
+            <select id="f-d6" onchange="calcDuty()"></select>
+            <div class="var-wrap hidden" id="vi6"><div class="var-note" id="vn6"></div><div class="var-row"><input type="number" id="vs6" min="0.5" max="5" step="0.5" placeholder="積分" oninput="calcDuty()"><span class="var-unit">分</span></div></div>
+            <div class="duty-pts z" id="dp6">未選</div>
+          </div>
+        </div>
+        <button class="ref-tgl" id="ref-btn" onclick="toggleRef()">📋 展開「擔任特定職務加分附表」</button>
+        <table class="ref-tbl" id="ref-tbl" aria-label="特定職務加分附表">
+          <tr><th>類別</th><th>職務名稱</th><th style="text-align:center;width:56px">加分</th><th style="width:220px">說明</th></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- D: 積分表 -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="sec-badge" aria-hidden="true">D</div>
+        <h2>積分表</h2>
+        <span class="sub">（採計時間 114.5.11 ～ 115.5.10）</span>
+      </div>
+      <div class="card-bd sc-tbl-wrap" style="padding:0">
+        <table class="sc-tbl" aria-label="積分計算表">
+          <thead>
+            <tr>
+              <th style="width:36%">項目</th>
+              <th>填報資料</th>
+              <th class="c" style="width:76px">得分</th>
+              <th class="c" style="width:68px">說明</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- 退休年資 -->
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:4px">退休年資</div>
+                <div class="hint">每年 1 分（以整年計）</div>
+              </td>
+              <td>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span style="font-size:12px;color:var(--g600)">成為正式教師學年　民國</span>
+                  <input type="number" id="formal-y" min="70" max="115" placeholder="學年" oninput="calc()">
+                  <span style="font-size:12px;color:var(--g600)">年</span>
+                </div>
+                <div class="yb empty" id="retire-calc">輸入學年後自動計算</div>
+              </td>
+              <td class="c"><div class="sv z" id="s-retire">0</div></td>
+              <td class="c" style="font-size:11px;color:var(--g400)">整年數</td>
+            </tr>
+
+            <!-- 本校年資 -->
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:4px">到本校服務年資</div>
+                <div class="hint">每年 1 分（以整年計）</div>
+              </td>
+              <td>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span style="font-size:12px;color:var(--g600)">到本校任職學年　民國</span>
+                  <input type="number" id="join-y" min="70" max="115" placeholder="學年" oninput="calc()">
+                  <span style="font-size:12px;color:var(--g600)">年</span>
+                </div>
+                <div class="yb empty" id="school-calc">輸入學年後自動計算</div>
+              </td>
+              <td class="c"><div class="sv z" id="s-school">0</div></td>
+              <td class="c" style="font-size:11px;color:var(--g400)">整年數</td>
+            </tr>
+
+            <!-- 當年獎勵 -->
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:4px">當年獎勵</div>
+                <div class="hint">記功每次 3 分；嘉獎每次 1 分</div>
+                <div class="cap">※ 上限 10 分</div>
+              </td>
+              <td>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <label style="font-size:12px;color:var(--g600);width:32px">記功</label>
+                    <input type="number" id="merit-g" min="0" max="10" placeholder="次" oninput="calc()">
+                    <span style="font-size:13px;color:var(--g600)">次</span>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <label style="font-size:12px;color:var(--g600);width:32px">嘉獎</label>
+                    <input type="number" id="merit-j" min="0" max="20" placeholder="次" oninput="calc()">
+                    <span style="font-size:13px;color:var(--g600)">次</span>
+                  </div>
+                  <label class="file-lbl">
+                    📎 上傳獎勵佐證
+                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="showFile(this,'mf')">
+                  </label>
+                  <div class="fname" id="mf"></div>
+                </div>
+              </td>
+              <td class="c"><div class="sv z" id="s-merit">0</div></td>
+              <td class="c" style="font-size:11px;color:var(--g400)">上限 10 分</td>
+            </tr>
+
+            <!-- 特定職務（自動） -->
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:4px">擔任特定職務加分</div>
+                <div class="hint">依附表加分（由 C 欄選填自動計算）</div>
+              </td>
+              <td>
+                <div id="duty-disp" style="font-size:12px;color:var(--g400)">請至 C 欄選填職務</div>
+              </td>
+              <td class="c"><div class="sv z" id="s-duty">0</div></td>
+              <td class="c" style="font-size:11px;color:var(--g400)">如附表</td>
+            </tr>
+
+            <!-- 研習時數 -->
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:4px">研習時數</div>
+                <div class="hint">每 35 小時 1 分</div>
+                <div class="cap">※ 上限 3 分</div>
+              </td>
+              <td>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input type="number" id="train-h" min="0" max="300" placeholder="時數" oninput="calc()">
+                  <span style="font-size:13px;color:var(--g600)">小時</span>
+                </div>
+                <label class="file-lbl" style="margin-top:8px">
+                  📎 上傳研習佐證
+                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="showFile(this,'tf')">
+                </label>
+                <div class="fname" id="tf"></div>
+              </td>
+              <td class="c"><div class="sv z" id="s-train">0</div></td>
+              <td class="c" style="font-size:11px;color:var(--g400)">上限 3 分</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 總分 -->
+    <div class="total-panel" aria-live="polite">
+      <div>
+        <div style="font-size:13px;opacity:.85;margin-bottom:6px">自評總積分</div>
+        <div class="total-score" id="total-score">0</div>
+        <div style="font-size:13px;opacity:.7;margin-top:4px">分</div>
+      </div>
+      <div class="breakdown" id="breakdown">請填寫積分項目以計算總分</div>
+    </div>
+
+    <div id="submit-area">
+    <button class="submit-btn" onclick="submitForm()">✉ 送出填報</button>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px">
+      <div id="cloud-dot" style="width:8px;height:8px;border-radius:50%;background:var(--g200)"></div>
+      <p style="font-size:12px;color:var(--g400)" id="cloud-status">送出後資料儲存至雲端，由審核委員進行複評</p>
+    </div>
+    </div>
+
+    <!-- 手機固定底部送出列 -->
+    <div class="bottom-bar" id="bottom-bar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--g400)">自評總積分</div>
+          <div style="font-size:22px;font-weight:700;color:var(--t600);line-height:1" id="bottom-score">0 分</div>
+        </div>
+        <button class="submit-btn" style="flex:2;padding:14px;font-size:15px" onclick="submitForm()">✉ 送出填報</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px">
+        <div id="mb-dot" style="width:7px;height:7px;border-radius:50%;background:var(--g200)"></div>
+        <span style="font-size:11px;color:var(--g400)" id="mb-status">送出後資料儲存至雲端</span>
+      </div>
+    </div>
+  </div>
+  <!-- end tab-form -->
+
+  <!-- ═══════════════════════════════════════
+       後台審核頁
+  ═══════════════════════════════════════ -->
+  <div id="tab-admin" class="tab-panel">
+
+    <!-- 統計儀表板 -->
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-n" id="st-total">0</div><div class="stat-l">填報總人數</div></div>
+      <div class="stat-card"><div class="stat-n" id="st-pend" style="color:var(--a400)">0</div><div class="stat-l">待審核</div></div>
+      <div class="stat-card"><div class="stat-n" id="st-rev">0</div><div class="stat-l">已審核</div></div>
+      <div class="stat-card"><div class="stat-n" id="st-avg">—</div><div class="stat-l">平均積分</div></div>
+    </div>
+
+    <!-- 工具列 -->
+    <div class="toolbar">
+      <input type="text" id="s-q" placeholder="搜尋姓名或職務…" oninput="renderAdmin()">
+      <select id="s-sort" onchange="renderAdmin()">
+        <option value="score-d">積分高→低</option>
+        <option value="score-a">積分低→高</option>
+        <option value="name">姓名排序</option>
+        <option value="time">填報時間</option>
+      </select>
+      <button class="flt-btn on" onclick="setFilter('all',this)">全部</button>
+      <button class="flt-btn" onclick="setFilter('pending',this)">待審核</button>
+      <button class="flt-btn" onclick="setFilter('reviewed',this)">已審核</button>
+      <button class="export-btn" onclick="exportCSV()">⬇ 匯出 CSV</button>
+      <button class="export-btn" style="background:var(--t600)" onclick="exportPrint()">🖨 列印報表</button>
+      <button class="logout-btn" onclick="adminLogout()">🔒 登出後台</button>
+    </div>
+
+    <!-- 填報列表 -->
+    <div id="sub-list">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <p>尚無教師填報資料</p>
+        <p style="font-size:12px;margin-top:6px">教師填報後會顯示於此</p>
+      </div>
+    </div>
+
+  </div>
+  <!-- end tab-admin -->
+
+</div><!-- end wrap -->
+
+<!-- Toast -->
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ▼▼▼  Firebase 設定區（必填）  ▼▼▼
+//  步驟：
+//  1. 前往 https://console.firebase.google.com/
+//  2. 建立專案（例如「yongfu-115」）
+//  3. 左側選 Build → Realtime Database → 建立資料庫（選亞洲/us-central1）
+//  4. 規則設為開放讀寫（測試模式 30 天）或參考 README
+//  5. 點選「專案設定」→「一般」→ 複製下方 firebaseConfig
+// ══════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey:            "貼上你的 apiKey",
+  authDomain:        "貼上你的 authDomain",
+  databaseURL:       "貼上你的 databaseURL",   // 必填，格式 https://xxx.firebaseio.com
+  projectId:         "貼上你的 projectId",
+  storageBucket:     "貼上你的 storageBucket",
+  messagingSenderId: "貼上你的 messagingSenderId",
+  appId:             "貼上你的 appId"
+};
+// ══════════════════════════════════════════════════════
+
+// ─── 常數 ───────────────────────────────────────────
+const CY = 115;
+const ADMIN_PW = 'yf@115';   // 可修改後台密碼
+const DB_PATH  = 'yf115/submissions';
+
+// ─── Firebase 初始化 ─────────────────────────────────
+let _db = null;
+let _fbReady = false;
+
+function initFirebase() {
+  // 偵測是否仍為預設佔位設定
+  if (FIREBASE_CONFIG.apiKey.startsWith('貼上')) {
+    document.getElementById('setup-banner').style.display = 'block';
+    updateCloudBadge(false);
+    return;
+  }
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _db = firebase.database();
+    _fbReady = true;
+    updateCloudBadge(true);
+    console.log('[Firebase] 連線成功');
+  } catch(e) {
+    console.warn('[Firebase] 初始化失敗，改用 localStorage：', e.message);
+    updateCloudBadge(false);
+  }
+}
+
+function updateCloudBadge(ok) {
+  const dot = document.getElementById('cloud-dot');
+  const txt = document.getElementById('cloud-status');
+  const mdot = document.getElementById('mb-dot');
+  const mtxt = document.getElementById('mb-status');
+  const set = (d, t, color, msg) => { if(d) d.style.background=color; if(t) t.textContent=msg; };
+  if (ok) {
+    set(dot, txt, '#1d9e75', '✓ 已連接 Firebase 雲端資料庫');
+    set(mdot, mtxt, '#1d9e75', '✓ 雲端連線中');
+  } else {
+    set(dot, txt, '#e24b4a', '⚠ 未連接雲端（請確認 Firebase 設定）');
+    set(mdot, mtxt, '#e24b4a', '⚠ 未連接雲端');
+  }
+}
+
+// ─── 讀寫封裝 ────────────────────────────────────────
+// 取得全部填報（回傳 Array，按時間倒序）
+async function sGet() {
+  if (_fbReady && _db) {
+    try {
+      const snap = await _db.ref(DB_PATH).once('value');
+      const val  = snap.val();
+      if (!val) return [];
+      // Firebase 物件 → 陣列，按 id 倒序
+      return Object.values(val).sort((a, b) => b.id - a.id);
+    } catch(e) {
+      console.warn('Firebase read error:', e);
+    }
+  }
+  try { return JSON.parse(localStorage.getItem('yf115_subs') || '[]'); } catch(e) { return []; }
+}
+
+// 寫入單筆（新增或覆蓋）
+async function sPut(rec) {
+  if (_fbReady && _db) {
+    try {
+      await _db.ref(DB_PATH + '/' + rec.id).set(rec);
+      return;
+    } catch(e) { console.warn('Firebase write error:', e); }
+  }
+  const all = await sGet();
+  const idx = all.findIndex(s => s.id === rec.id);
+  if (idx >= 0) all[idx] = rec; else all.unshift(rec);
+  localStorage.setItem('yf115_subs', JSON.stringify(all));
+}
+
+// 更新單筆部分欄位
+async function sUpdate(id, patch) {
+  if (_fbReady && _db) {
+    try {
+      await _db.ref(DB_PATH + '/' + id).update(patch);
+      return;
+    } catch(e) { console.warn('Firebase update error:', e); }
+  }
+  const all = await sGet();
+  const idx = all.findIndex(s => s.id === id);
+  if (idx >= 0) { Object.assign(all[idx], patch); localStorage.setItem('yf115_subs', JSON.stringify(all)); }
+}
+
+// 刪除單筆
+async function sDelete(id) {
+  if (_fbReady && _db) {
+    try {
+      await _db.ref(DB_PATH + '/' + id).remove();
+      return;
+    } catch(e) { console.warn('Firebase remove error:', e); }
+  }
+  let all = await sGet();
+  all = all.filter(s => s.id !== id);
+  localStorage.setItem('yf115_subs', JSON.stringify(all));
+}
+
+// 監聽即時更新（後台用）
+let _adminListener = null;
+function subscribeAdmin() {
+  if (!_fbReady || !_db) return;
+  if (_adminListener) { _db.ref(DB_PATH).off('value', _adminListener); }
+  _adminListener = _db.ref(DB_PATH).on('value', () => renderAdmin());
+}
+function unsubscribeAdmin() {
+  if (_fbReady && _db && _adminListener) {
+    _db.ref(DB_PATH).off('value', _adminListener);
+    _adminListener = null;
+  }
+}
+
+// ─── 職務加分附表（依 115.05.13 職編工作加分表）────────
+// variable:true → 分數由教師自填；note → 說明文字；max → 上限
+const DUTIES = [
+  // ① 班級導師
+  {l:'高年級導師（任滿兩年）',         c:'班級導師',   p:3, note:'任滿兩年加3分，用過即另起計。由導師提出後啟用。'},
+  {l:'接任六年級導師（任滿一年）',     c:'班級導師',   p:2, note:'加2分，且不受當年度使用完畢之限制，可累計。'},
+  // ② 行政職務
+  {l:'學年主任（任滿一年）',           c:'行政職務',   p:3, note:'學年主任任滿1年加3分。'},
+  {l:'組長卸任（每年）',               c:'行政職務',   p:3, note:'任期內每年加3分，上限10分。'},
+  // ③ 委員會
+  {l:'教師評審委員（出席≥2/3，確實執行）', c:'委員會',   p:3, note:'出席會議次數2/3以上且確實執行任務。任期年9/1至隔年8/31，任期結束後加分。'},
+  {l:'考核委員（出席≥2/3）',           c:'委員會',   p:2, note:'出席該委員會會議次數2/3以上加2分。任期年9/1至隔年8/31，任期結束後加分。'},
+  {l:'職編共識平台委員（出席≥2/3）',   c:'委員會',   p:1, note:'出席會議（含積分審查會議）次數2/3以上加1分。'},
+  {l:'課程發展委員（出席≥2/3）',       c:'委員會',   p:3, note:'出席該委員會會議次數2/3以上加3分。'},
+  {l:'性平委員（出席≥2/3）',           c:'委員會',   p:2, note:'出席會議次數2/3以上加2分。以學年度計算任期，任期結束後再加分。'},
+  {l:'性平調查委員（每完成一案調查報告）', c:'委員會', p:3, note:'每接1案且完成調查報告者加3分。'},
+  // ④ 輔導職務
+  {l:'認輔教師（完成認輔紀錄）',       c:'輔導職務',  p:3, note:'113學年度擔任認輔教師並完成認輔紀錄者，於114學年度（115年5月）辦理加分。加3分。'},
+  // ⑤ 特教相關
+  {l:'普通班導師輔導特殊生（滿一學年）', c:'特教相關', p:1, note:'依法參與IEP擬定與執行，服務優良有輔導紀錄可查，滿一學年加1分。'},
+  {l:'普通班導師輔導特殊生（學期中轉入/鑑定）', c:'特教相關', p:0.5, note:'學期中收受特教轉學生，或學期中鑑定之特教生，就讀滿一學期但未滿一學年，加0.5分。'},
+  // ⑥ 其他行政
+  {l:'中央餐廚代表（出席≥2/3）',       c:'其他職務',  p:1, note:'出席會議次數2/3以上加1分。'},
+  {l:'中央餐廚代表（出席≥2/3 ＋ 監廚≥2次）', c:'其他職務', p:2, note:'出席會議2/3以上（+1分），另出席監廚工作每學年至少2次再加1分，合計2分。'},
+  // ⑦ 教師組織
+  {l:'教師會理事長',                    c:'教師組織',  p:5},
+  {l:'教師會總幹事',                    c:'教師組織',  p:5},
+  {l:'教師會理監事',                    c:'教師組織',  p:1},
+  {l:'教師會監事主席',                  c:'教師組織',  p:1},
+  {l:'教師會文書與會計',                c:'教師組織',  p:1},
+  // ⑧ 競賽成果
+  {l:'科展（送展1件作品）',             c:'競賽成果',  p:3, note:'送展1件作品加3分。'},
+  // ⑨ 編輯出版
+  {l:'校刊作文編輯',                    c:'編輯出版',  p:2, note:'一學期出一刊，共同負責文章收集編排、校稿等工作。'},
+  {l:'永福人輔導期刊編輯（完成2期）',   c:'編輯出版',  p:1, note:'每學年完成2期刊物者加分。3位名額，超過則抽籤。'},
+  // ⑩ 童軍
+  {l:'童軍授課教師（任滿一學年）',      c:'童軍課程',  p:3, note:'每學年課後辦理團集會至少10次（上下學期各5次），每次2節課。需配合招生、設計課程及校內活動。'},
+  {l:'童軍帶隊校外活動',               c:'童軍課程',  p:0, variable:true, vMin:0.5, vMax:2, vStep:0.5,
+    note:'帶隊參加校外童軍集會、露營活動。每參加1天 +0.5分，至多 +2分。請填入天數對應積分（0.5、1、1.5、2）。'},
+  // ⑪ 帶隊團隊
+  {l:'帶隊課外團隊',                    c:'帶隊團隊',  p:0, variable:true, vMin:0.5, vMax:5, vStep:0.5,
+    note:'由行政處室或帶隊老師提出訓練計畫並執行。每40分鐘為1節，平均每週1節加1分、每週2節加2分。每人可參加多個團隊，最高總計5分。'},
+];
+
+function buildDropdowns() {
+  const cats = [...new Set(DUTIES.map(d => d.c))];
+  ['f-d1','f-d2','f-d3','f-d4','f-d5','f-d6'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '<option value="">── 請選擇 ──</option>';
+    cats.forEach(cat => {
+      const og = document.createElement('optgroup');
+      og.label = '── ' + cat + ' ──';
+      DUTIES.filter(d => d.c === cat).forEach(d => {
+        const o = document.createElement('option');
+        o.value = d.l;
+        o.textContent = d.variable
+          ? d.l + '（自填積分）'
+          : d.l + '（+' + d.p + '分）';
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  });
+}
+
+function buildRefTable() {
+  const tbl = document.getElementById('ref-tbl');
+  // Update header to include note column
+  tbl.querySelector('tr').innerHTML =
+    '<th>類別</th><th>職務名稱</th><th style="text-align:center;width:54px">加分</th><th style="width:220px">說明</th>';
+  let lastCat = '';
+  DUTIES.forEach(d => {
+    if (d.c !== lastCat) {
+      const hr = tbl.insertRow();
+      hr.className = 'cat-row';
+      const c = hr.insertCell();
+      c.colSpan = 4;
+      c.textContent = '▸ ' + d.c;
+      lastCat = d.c;
+    }
+    const r = tbl.insertRow();
+    r.insertCell().textContent = d.c;
+    r.insertCell().textContent = d.l;
+    const ptsTd = r.insertCell();
+    ptsTd.style.cssText = 'text-align:center;font-weight:700;color:var(--t600)';
+    ptsTd.textContent = d.variable
+      ? '+0.5~' + d.vMax
+      : '+' + d.p;
+    const noteTd = r.insertCell();
+    noteTd.style.cssText = 'font-size:11px;color:var(--g600);line-height:1.4';
+    noteTd.textContent = d.note || '';
+  });
+}
+
+function toggleRef() {
+  const tbl = document.getElementById('ref-tbl');
+  const btn = document.getElementById('ref-btn');
+  tbl.classList.toggle('open');
+  btn.textContent = tbl.classList.contains('open')
+    ? '▲ 收起加分附表'
+    : '📋 展開「擔任特定職務加分附表」';
+}
+
+// ─── 取得職務積分（支援自填型） ─────────────────────────
+function getDutyPts(selId) {
+  const sel = document.getElementById(selId);
+  if (!sel.value) return 0;
+  const d = DUTIES.find(x => x.l === sel.value);
+  if (!d) return 0;
+  if (d.variable) {
+    const idx = selId.replace('f-d','');
+    const v = parseFloat(document.getElementById('vs' + idx).value) || 0;
+    return Math.min(Math.max(0, v), d.vMax);
+  }
+  return d.p;
+}
+
+function dutyTotal() {
+  return getDutyPts('f-d1') + getDutyPts('f-d2') + getDutyPts('f-d3') +
+         getDutyPts('f-d4') + getDutyPts('f-d5') + getDutyPts('f-d6');
+}
+
+function calcDuty() {
+  [['f-d1','dp1','vi1','vn1','vs1'],
+   ['f-d2','dp2','vi2','vn2','vs2'],
+   ['f-d3','dp3','vi3','vn3','vs3'],
+   ['f-d4','dp4','vi4','vn4','vs4'],
+   ['f-d5','dp5','vi5','vn5','vs5'],
+   ['f-d6','dp6','vi6','vn6','vs6']].forEach(([sid,bid,viId,vnId,vsId]) => {
+    const sel = document.getElementById(sid);
+    const d = sel.value ? DUTIES.find(x => x.l === sel.value) : null;
+    const vi = document.getElementById(viId);
+    const vn = document.getElementById(vnId);
+    const vs = document.getElementById(vsId);
+
+    if (d && d.variable) {
+      vi.classList.remove('hidden');
+      vn.textContent = d.note || '';
+      vs.max = d.vMax;
+      vs.min = d.vMin;
+      vs.step = d.vStep;
+    } else {
+      vi.classList.add('hidden');
+    }
+
+    const pts = getDutyPts(sid);
+    const el = document.getElementById(bid);
+    el.textContent = pts ? '+' + pts + ' 分' : (sel.value ? '請填積分' : '未選');
+    el.className = 'duty-pts' + (pts ? '' : ' z');
+  });
+
+  const parts = ['f-d1','f-d2','f-d3','f-d4','f-d5','f-d6'].map(id => {
+    const v = document.getElementById(id).value;
+    const p = getDutyPts(id);
+    return v ? '• ' + v + '（+' + p + '分）' : '';
+  }).filter(Boolean);
+  const disp = document.getElementById('duty-disp');
+  disp.innerHTML = parts.length
+    ? parts.map(p => '<div style="margin-bottom:3px;color:var(--g800)">' + p + '</div>').join('')
+    : '<span style="color:var(--g400)">請至 C 欄選填職務</span>';
+  calc();
+}
+
+// ─── 主計算 ──────────────────────────────────────────
+function ni(id) { return parseInt(document.getElementById(id).value) || 0; }
+
+function calc() {
+  const fy = ni('formal-y'), jy = ni('join-y');
+  const ry = fy ? Math.max(0, CY - fy) : 0;
+  const sy = jy ? Math.max(0, CY - jy) : 0;
+
+  const rc = document.getElementById('retire-calc');
+  rc.textContent = fy
+    ? '年資 = ' + CY + ' − ' + fy + ' = ' + ry + ' 年'
+    : '輸入學年後自動計算';
+  rc.className = 'yb' + (fy ? '' : ' empty');
+
+  const sc = document.getElementById('school-calc');
+  sc.textContent = jy
+    ? '年資 = ' + CY + ' − ' + jy + ' = ' + sy + ' 年'
+    : '輸入學年後自動計算';
+  sc.className = 'yb' + (jy ? '' : ' empty');
+
+  const g = ni('merit-g'), j = ni('merit-j'), h = ni('train-h');
+  const dp = dutyTotal();
+  const sm = Math.min(g * 3 + j, 10);
+  const st = Math.min(Math.floor(h / 35), 3);
+  const total = +(ry + sy + sm + dp + st).toFixed(1);
+
+  setSV('s-retire', ry); setSV('s-school', sy);
+  setSV('s-merit', sm);  setSV('s-duty', dp); setSV('s-train', st);
+  document.getElementById('total-score').textContent = total;
+  const bs = document.getElementById('bottom-score');
+  if (bs) bs.textContent = total + ' 分';
+
+  const parts = [];
+  if (ry) parts.push('退休年資 ' + ry);
+  if (sy) parts.push('本校年資 ' + sy);
+  if (sm) parts.push('獎勵 ' + sm);
+  if (dp) parts.push('職務 ' + dp);
+  if (st) parts.push('研習 ' + st);
+  document.getElementById('breakdown').innerHTML = parts.length
+    ? parts.map(p => '<span>' + p + ' 分</span>').join('')
+    : '請填寫積分項目以計算總分';
+}
+
+function setSV(id, val) {
+  const el = document.getElementById(id);
+  el.textContent = val;
+  el.className = 'sv' + (val === 0 ? ' z' : '');
+}
+
+function showFile(input, nameId) {
+  document.getElementById(nameId).textContent =
+    input.files[0] ? '📄 ' + input.files[0].name : '';
+}
+
+// ─── 送出填報 ────────────────────────────────────────
+async function submitForm() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('❌ 請填寫姓名', 'e'); return; }
+
+  const fy = ni('formal-y'), jy = ni('join-y');
+  const ry = fy ? Math.max(0, CY - fy) : 0;
+  const sy = jy ? Math.max(0, CY - jy) : 0;
+  const g = ni('merit-g'), j = ni('merit-j'), h = ni('train-h');
+  const dp = dutyTotal();
+  const sm = Math.min(g * 3 + j, 10);
+  const st = Math.min(Math.floor(h / 35), 3);
+
+  const rec = {
+    id: Date.now(),
+    time: new Date().toLocaleString('zh-TW'),
+    name,
+    role:  document.getElementById('f-role').value,
+    p1:    document.getElementById('f-p1').value,
+    p2:    document.getElementById('f-p2').value,
+    p3:    document.getElementById('f-p3').value,
+    spec:  document.getElementById('f-spec').value,
+    cert:  document.getElementById('f-cert').value,
+    d1:document.getElementById('f-d1').value, d2:document.getElementById('f-d2').value,
+    d3:document.getElementById('f-d3').value, d4:document.getElementById('f-d4').value,
+    d5:document.getElementById('f-d5').value, d6:document.getElementById('f-d6').value,
+    dp1:getDutyPts('f-d1'), dp2:getDutyPts('f-d2'), dp3:getDutyPts('f-d3'),
+    dp4:getDutyPts('f-d4'), dp5:getDutyPts('f-d5'), dp6:getDutyPts('f-d6'),
+    vs1:parseFloat(document.getElementById('vs1').value)||0,
+    vs2:parseFloat(document.getElementById('vs2').value)||0,
+    vs3:parseFloat(document.getElementById('vs3').value)||0,
+    vs4:parseFloat(document.getElementById('vs4').value)||0,
+    vs5:parseFloat(document.getElementById('vs5').value)||0,
+    vs6:parseFloat(document.getElementById('vs6').value)||0,
+    fy, jy, ry, sy, g, j, h, sm, dp, st,
+    total: +(ry + sy + sm + dp + st).toFixed(1),
+    status: 'pending', reviewNote: ''
+  };
+
+  // Cloud save with UI feedback
+  const dot = document.getElementById('cloud-dot');
+  const statusEl = document.getElementById('cloud-status');
+  dot.style.background = '#ba7517';
+  statusEl.textContent = '儲存中…';
+
+  // 檢查是否已有同名填報
+  const allSubs = await sGet();
+  const existing = allSubs.find(s => s.name === name);
+  if (existing) {
+    if (!confirm('「' + name + '」已有一筆填報記錄，確定要覆蓋嗎？')) {
+      dot.style.background = '#1d9e75';
+      statusEl.textContent = '✓ 已連接 Firebase 雲端資料庫';
+      return;
+    }
+    // 覆蓋舊記錄 id，保持同一筆記錄
+    rec.id = existing.id;
+  }
+
+  await sPut(rec);
+  dot.style.background = '#1d9e75';
+  statusEl.textContent = '✓ 已儲存至雲端（' + rec.time + '）';
+  showToast('✅ ' + name + ' 填報成功！總積分 ' + rec.total + ' 分', 's');
+}
+
+// ─── Toast ───────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || 's');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ─── Tab 切換 ────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+  if (id === 'admin') {
+    renderAdmin();
+    subscribeAdmin();   // 啟動即時監聽
+  } else {
+    unsubscribeAdmin(); // 離開後台時取消監聽
+  }
+}
+
+// ─── 密碼保護 ─────────────────────────────────────────
+let adminAuthed = sessionStorage.getItem('yf_admin') === '1';
+let pendingBtn = null;
+
+function requirePw(btn) {
+  if (adminAuthed) { switchTab('admin', btn); return; }
+  pendingBtn = btn;
+  document.getElementById('pw-overlay').classList.remove('hidden');
+  document.getElementById('pw-in').value = '';
+  document.getElementById('pw-err').textContent = '';
+  setTimeout(() => document.getElementById('pw-in').focus(), 80);
+}
+
+function checkPw() {
+  if (document.getElementById('pw-in').value === ADMIN_PW) {
+    adminAuthed = true;
+    sessionStorage.setItem('yf_admin', '1');
+    document.getElementById('pw-overlay').classList.add('hidden');
+    switchTab('admin', pendingBtn);
+  } else {
+    document.getElementById('pw-err').textContent = '❌ 密碼錯誤，請重試';
+    document.getElementById('pw-in').value = '';
+    document.getElementById('pw-in').focus();
+  }
+}
+
+function cancelPw() {
+  document.getElementById('pw-overlay').classList.add('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('btn-form').classList.add('on');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('tab-form').classList.add('on');
+}
+
+function adminLogout() {
+  adminAuthed = false;
+  sessionStorage.removeItem('yf_admin');
+  cancelPw();
+  showToast('🔒 已登出後台', 's');
+}
+
+// ─── 篩選 ────────────────────────────────────────────
+let curFilter = 'all';
+function setFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.flt-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAdmin();
+}
+
+// ─── 後台渲染 ─────────────────────────────────────────
+async function renderAdmin() {
+  const container = document.getElementById('sub-list');
+  container.innerHTML = '<div class="loading">載入中…</div>';
+
+  const all = await sGet();
+  const q = (document.getElementById('s-q').value || '').toLowerCase();
+  const sort = document.getElementById('s-sort').value;
+  let list = [...all];
+
+  if (q) list = list.filter(s =>
+    s.name.includes(q) || (s.p1||'').includes(q) || (s.role||'').includes(q));
+  if (curFilter === 'pending')  list = list.filter(s => s.status === 'pending');
+  if (curFilter === 'reviewed') list = list.filter(s => s.status === 'reviewed');
+
+  if (sort === 'score-d') list.sort((a,b) => b.total - a.total);
+  else if (sort === 'score-a') list.sort((a,b) => a.total - b.total);
+  else if (sort === 'name') list.sort((a,b) => a.name.localeCompare(b.name,'zh-TW'));
+
+  // Stats
+  const pending  = all.filter(s => s.status === 'pending').length;
+  const reviewed = all.filter(s => s.status === 'reviewed').length;
+  const avg = all.length
+    ? Math.round(all.reduce((a,b) => a + b.total, 0) / all.length) : '—';
+  document.getElementById('st-total').textContent = all.length;
+  document.getElementById('st-pend').textContent  = pending;
+  document.getElementById('st-rev').textContent   = reviewed;
+  document.getElementById('st-avg').textContent   = avg;
+
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <p>${all.length ? '沒有符合條件的記錄' : '尚無教師填報資料'}</p>
+      ${!all.length ? '<p style="font-size:12px;margin-top:6px">教師填報後會顯示於此</p>' : ''}
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(s => {
+    const ini = s.name.length >= 2 ? s.name.slice(-2) : s.name;
+    const duties = [
+      s.d1 ? s.d1 + '（+' + (s.dp1||0) + '分）' : '',
+      s.d2 ? s.d2 + '（+' + (s.dp2||0) + '分）' : '',
+      s.d3 ? s.d3 + '（+' + (s.dp3||0) + '分）' : '',
+      s.d4 ? s.d4 + '（+' + (s.dp4||0) + '分）' : '',
+      s.d5 ? s.d5 + '（+' + (s.dp5||0) + '分）' : '',
+      s.d6 ? s.d6 + '（+' + (s.dp6||0) + '分）' : '',
+    ].filter(Boolean).join('、') || '—';
+
+    return `<div class="sub-card" id="card-${s.id}">
+      <div class="sub-hd" onclick="toggleDetail(${s.id},this)" aria-expanded="false">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="avt" aria-hidden="true">${ini}</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:700">${s.name}</span>
+              <span style="font-size:12px;color:var(--g400)">${s.role||'教師'}</span>
+              ${s.status==='reviewed' ? '<span class="reviewed-mark">✓ 已審核</span>' : ''}
+            </div>
+            <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
+              ${s.p1 ? `<span class="pchip">1. ${s.p1}</span>` : ''}
+              ${s.p2 ? `<span class="pchip p2">2. ${s.p2}</span>` : ''}
+              ${s.p3 ? `<span class="pchip p3">3. ${s.p3}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="score-badge">${s.total}<small> 分</small></div>
+          <span class="${s.status==='reviewed' ? 'status-r' : 'status-p'}">${s.status==='reviewed' ? '已審核' : '待審核'}</span>
+          <span class="expand-icon" id="exp-${s.id}" aria-hidden="true">▾</span>
+        </div>
+      </div>
+      <div class="sub-detail" id="det-${s.id}">
+
+        <!-- 基本明細 -->
+        <div class="detail-grid">
+          <dl class="detail-item"><dt>填報時間</dt><dd>${s.time}</dd></dl>
+          <dl class="detail-item"><dt>專長科目</dt><dd>${s.spec||'—'}</dd></dl>
+          <dl class="detail-item"><dt>認證方式</dt><dd>${s.cert||'—'}</dd></dl>
+          <dl class="detail-item"><dt>成為正式教師學年</dt><dd>${s.fy ? '民國 '+s.fy+' 年（年資 '+s.ry+' 年）' : '—'}</dd></dl>
+          <dl class="detail-item"><dt>到本校任職學年</dt><dd>${s.jy ? '民國 '+s.jy+' 年（年資 '+s.sy+' 年）' : '—'}</dd></dl>
+          <dl class="detail-item"><dt>記功／嘉獎</dt><dd>記功 ${s.g||0} 次 / 嘉獎 ${s.j||0} 次</dd></dl>
+          <dl class="detail-item"><dt>研習時數</dt><dd>${s.h||0} 小時</dd></dl>
+          <dl class="detail-item" style="grid-column:span 2"><dt>擔任特定職務</dt><dd>${duties}</dd></dl>
+        </div>
+
+        <!-- 積分明細 -->
+        <div class="score-bd-grid">
+          ${[['退休年資',s.ry||0],['本校年資',s.sy||0],['獎勵積分',s.sm||0],['職務加分',s.dp||0],['研習積分',s.st||0]].map(([l,v])=>
+            `<div class="score-bd-item"><div class="score-bd-val">${v}</div><div class="score-bd-label">${l}</div></div>`
+          ).join('')}
+        </div>
+
+        <!-- 審核備註 -->
+        ${s.reviewNote ? `<div class="note-display" style="display:block">💬 審核備註：${s.reviewNote}</div>` : ''}
+        <textarea class="note-area" id="note-${s.id}" placeholder="輸入審核備註（選填）…">${s.reviewNote||''}</textarea>
+
+        <!-- 操作按鈕 -->
+        <div class="admin-actions">
+          <button class="action-btn btn-note" onclick="toggleNote(${s.id})">💬 備註</button>
+          <button class="action-btn btn-del" onclick="delRec(${s.id})">🗑 刪除</button>
+          <button class="action-btn btn-ok" onclick="approve(${s.id})">
+            ${s.status==='reviewed' ? '↩ 取消審核' : '✓ 確認審核'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDetail(id, hd) {
+  const d = document.getElementById('det-' + id);
+  const e = document.getElementById('exp-' + id);
+  const isOpen = d.classList.contains('open');
+  d.classList.toggle('open', !isOpen);
+  hd.classList.toggle('open', !isOpen);
+  hd.setAttribute('aria-expanded', String(!isOpen));
+  e.className = 'expand-icon' + (!isOpen ? ' open' : '');
+}
+
+function toggleNote(id) {
+  document.getElementById('note-' + id).classList.toggle('open');
+}
+
+async function approve(id) {
+  const subs = await sGet();
+  const rec = subs.find(s => s.id === id);
+  if (!rec) return;
+  const noteEl = document.getElementById('note-' + id);
+  const newStatus = rec.status === 'reviewed' ? 'pending' : 'reviewed';
+  const reviewNote = noteEl ? noteEl.value : (rec.reviewNote || '');
+  await sUpdate(id, { status: newStatus, reviewNote });
+  renderAdmin();
+}
+
+async function delRec(id) {
+  if (!confirm('確定刪除此筆記錄？')) return;
+  await sDelete(id);
+  renderAdmin();
+}
+
+async function exportCSV() {
+  const subs = await sGet();
+
+  const header = [
+    '姓名','現任職務','第一志願','第二志願','第三志願',
+    '成為正式教師學年','退休年資(年)','到本校任職學年','本校年資(年)',
+    '職務一','職務一加分','職務二','職務二加分','職務三','職務三加分',
+    '職務四','職務四加分','職務五','職務五加分','職務六','職務六加分',
+    '獎勵分','職務加分','研習分','總積分','狀態','審核備註','填報時間'
+  ];
+  const rows = subs.map(s => [
+    s.name, s.role, s.p1, s.p2, s.p3,
+    s.fy, s.ry, s.jy, s.sy,
+    s.d1, s.dp1, s.d2, s.dp2, s.d3, s.dp3,
+    s.d4||'', s.dp4||0, s.d5||'', s.dp5||0, s.d6||'', s.dp6||0,
+    s.sm, s.dp, s.st, s.total,
+    s.status === 'reviewed' ? '已審核' : '待審核',
+    s.reviewNote || '', s.time
+  ]);
+
+  const csv = [header, ...rows]
+    .map(r => r.map(c => '"' + (c || '') + '"').join(','))
+    .join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '永福國小115積分表_' + new Date().toLocaleDateString('zh-TW').replace(/\//g,'-') + '.csv';
+  a.click();
+}
+
+async function exportPrint() {
+  const subs = await sGet();
+  if (!subs.length) { alert('尚無資料可匯出'); return; }
+  const sorted = [...subs].sort((a,b) => b.total - a.total);
+  const now = new Date().toLocaleString('zh-TW');
+
+  const rows = sorted.map((s, i) => {
+    const duties = [s.d1,s.d2,s.d3,s.d4,s.d5,s.d6]
+      .filter(Boolean).join('、') || '—';
+    const prefs = [s.p1,s.p2,s.p3].filter(Boolean).join(' / ') || '—';
+    const status = s.status === 'reviewed' ? '✓ 已審核' : '待審核';
+    return `<tr>
+      <td style="text-align:center">${i+1}</td>
+      <td><strong>${s.name}</strong></td>
+      <td style="text-align:center">${s.role||'—'}</td>
+      <td>${prefs}</td>
+      <td style="text-align:center">${s.ry||0}</td>
+      <td style="text-align:center">${s.sy||0}</td>
+      <td style="text-align:center">${s.sm||0}</td>
+      <td style="text-align:center">${s.dp||0}</td>
+      <td style="text-align:center">${s.st||0}</td>
+      <td style="text-align:center;font-size:16px;font-weight:700;color:#0f6e56">${s.total}</td>
+      <td style="text-align:center;font-size:11px">${status}</td>
+      <td style="font-size:11px;color:#5f5e5a">${duties}</td>
+      <td style="font-size:11px;color:#5f5e5a">${s.reviewNote||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="UTF-8">
+<title>永福國小 115 學年度積分總表</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans TC',sans-serif;font-size:12px;color:#2c2c2a;padding:20px}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+  .cover{text-align:center;margin-bottom:24px;border-bottom:2px solid #0f6e56;padding-bottom:16px}
+  .cover h1{font-size:18px;font-weight:700;color:#0f6e56;margin-bottom:4px}
+  .cover p{font-size:11px;color:#888780}
+  table{width:100%;border-collapse:collapse;margin-bottom:20px}
+  th{background:#085041;color:#fff;padding:7px 6px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap}
+  td{padding:6px 6px;border-bottom:1px solid #d3d1c7;vertical-align:top}
+  tr:nth-child(even) td{background:#f7f6f3}
+  tr:hover td{background:#e1f5ee}
+  .summary{display:flex;gap:24px;margin-bottom:16px;font-size:12px}
+  .sum-item{background:#e1f5ee;border-radius:8px;padding:10px 16px;text-align:center}
+  .sum-n{font-size:22px;font-weight:700;color:#0f6e56}
+  .sum-l{font-size:11px;color:#5f5e5a;margin-top:2px}
+  .footer{text-align:center;font-size:10px;color:#888780;margin-top:16px;border-top:1px solid #d3d1c7;padding-top:10px}
+  @media print{
+    body{padding:10px}
+    .no-print{display:none}
+    thead{display:table-header-group}
+    tr{page-break-inside:avoid}
+  }
+</style>
+</head><body>
+<div class="cover">
+  <h1>永福國小 115 學年度教師課職務志願選填積分總表</h1>
+  <p>積分採計時間：114.5.11 ～ 115.5.10　｜　列印時間：${now}　｜　共 ${subs.length} 筆填報</p>
+</div>
+<div class="summary">
+  <div class="sum-item"><div class="sum-n">${subs.length}</div><div class="sum-l">填報總人數</div></div>
+  <div class="sum-item"><div class="sum-n">${subs.filter(s=>s.status==='reviewed').length}</div><div class="sum-l">已審核</div></div>
+  <div class="sum-item"><div class="sum-n">${subs.filter(s=>s.status==='pending').length}</div><div class="sum-l">待審核</div></div>
+  <div class="sum-item"><div class="sum-n">${subs.length ? (subs.reduce((a,b)=>a+b.total,0)/subs.length).toFixed(1) : '—'}</div><div class="sum-l">平均積分</div></div>
+  <div class="sum-item"><div class="sum-n">${subs.length ? Math.max(...subs.map(s=>s.total)) : '—'}</div><div class="sum-l">最高積分</div></div>
+</div>
+<div style="text-align:right;margin-bottom:8px" class="no-print">
+  <button onclick="window.print()" style="padding:8px 20px;background:#0f6e56;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer">🖨 列印 / 儲存 PDF</button>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th style="width:32px">排</th>
+      <th style="width:60px">姓名</th>
+      <th style="width:54px">職務</th>
+      <th style="width:120px">志願順序</th>
+      <th style="width:40px;text-align:center">退休<br>年資</th>
+      <th style="width:40px;text-align:center">本校<br>年資</th>
+      <th style="width:36px;text-align:center">獎勵</th>
+      <th style="width:40px;text-align:center">職務<br>加分</th>
+      <th style="width:36px;text-align:center">研習</th>
+      <th style="width:48px;text-align:center">總積分</th>
+      <th style="width:52px;text-align:center">狀態</th>
+      <th>擔任特定職務</th>
+      <th style="width:90px">審核備註</th>
+    </tr>
+  </thead>
+  <tbody>${rows}</tbody>
+</table>
+<div class="footer">
+  本表由系統自動產生，如有疑問請洽職編共識平台委員。　永福國小 115 學年度教師課職務志願選填積分系統
+</div>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { alert('請允許彈出視窗以開啟列印報表'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+<!-- Firebase SDK (compat v9 for simple HTML) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+// 頁面載入後初始化 Firebase
+window.addEventListener('DOMContentLoaded', () => {
+  initFirebase();
+  buildDropdowns();
+  buildRefTable();
+});
+</script>
+</body>
+</html>

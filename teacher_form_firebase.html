@@ -570,7 +570,57 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
       <button class="flt-btn" onclick="setFilter('reviewed',this)">已審核</button>
       <button class="export-btn" onclick="exportCSV()">⬇ 匯出 CSV</button>
       <button class="export-btn" style="background:var(--t600)" onclick="exportPrint()">🖨 列印報表</button>
+      <button class="export-btn" style="background:var(--g600)" onclick="toggleQR()">🔲 QR Code</button>
       <button class="logout-btn" onclick="adminLogout()">🔒 登出後台</button>
+    </div>
+
+    <!-- QR Code 海報面板 -->
+    <div id="qr-panel" style="display:none;margin-bottom:16px">
+      <div class="card" style="overflow:visible">
+        <div class="card-hd" style="justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="sec-badge" style="background:var(--g600)" aria-hidden="true">QR</div>
+            <h2 style="color:var(--g800)">填報 QR Code — 供老師掃描填報</h2>
+          </div>
+          <button onclick="printQR()" style="padding:6px 16px;background:var(--t600);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 列印海報</button>
+        </div>
+        <div class="card-bd" style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+
+          <!-- 海報預覽 -->
+          <div id="qr-poster-preview" style="background:linear-gradient(135deg,var(--t600),var(--t400));border-radius:12px;padding:20px 24px;color:#fff;text-align:center;min-width:240px;max-width:280px">
+            <div style="font-size:11px;opacity:.8;letter-spacing:2px;margin-bottom:6px">永 福 國 小</div>
+            <div style="font-size:14px;font-weight:900;line-height:1.35;margin-bottom:14px">115 學年度教師課職務<br>志願選填積分系統</div>
+            <div style="background:#fff;border-radius:10px;padding:12px;display:inline-block;margin-bottom:14px">
+              <div id="qr-output" style="line-height:0"></div>
+            </div>
+            <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:8px 12px;font-size:11px;margin-bottom:10px">
+              📱 手機開啟相機對準掃描<br>
+              <span style="opacity:.8">iOS / Android 原生相機即可，不需 App</span>
+            </div>
+            <div style="font-size:10px;opacity:.6;word-break:break-all" id="qr-url-display"></div>
+          </div>
+
+          <!-- 說明 -->
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:13px;font-weight:700;color:var(--t800);margin-bottom:10px">📋 填報 QR Code 說明</div>
+            <div style="font-size:12px;color:var(--g600);line-height:2">
+              <div>✅ QR Code 已自動對應本頁網址</div>
+              <div>✅ iPhone / Android 相機掃描即開</div>
+              <div>✅ 手機平板均已優化，可直接填報</div>
+            </div>
+            <div style="margin-top:14px;font-size:12px;font-weight:700;color:var(--g800);margin-bottom:6px">使用方式</div>
+            <div style="font-size:12px;color:var(--g600);line-height:2">
+              <div>① 點「🖨 列印海報」→ A4 列印張貼</div>
+              <div>② 或截圖傳入 LINE 群組讓老師點擊</div>
+              <div>③ 老師掃描後直接在手機填報送出</div>
+            </div>
+            <div style="margin-top:14px;background:var(--t50);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t800)">
+              <strong>目前填報網址：</strong><br>
+              <span id="qr-url-text" style="word-break:break-all;color:var(--t600)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 填報列表 -->
@@ -1431,17 +1481,119 @@ async function exportPrint() {
   w.document.close();
 }
 
-<!-- Firebase SDK (compat v9 for simple HTML) -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<!-- QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-// 頁面載入後初始化 Firebase
-window.addEventListener('DOMContentLoaded', () => {
-  initFirebase();
-  buildDropdowns();
-  buildRefTable();
-});
+// 直接呼叫（不用 DOMContentLoaded，腳本在 </body> 前，DOM 已就緒）
+// ─── QR Code 功能 ────────────────────────────────────
+function buildQR() {
+  const url = window.location.href;
+  const out  = document.getElementById('qr-output');
+  const disp = document.getElementById('qr-url-display');
+  const txt  = document.getElementById('qr-url-text');
+  if (!out) return;
+  out.innerHTML = '';
+  try {
+    new QRCode(out, {
+      text: url,
+      width: 160,
+      height: 160,
+      colorDark: '#085041',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) { out.textContent = '（QR 產生中…）'; }
+  const short = url.length > 55 ? url.slice(0,52)+'…' : url;
+  if (disp) disp.textContent = short;
+  if (txt)  txt.textContent  = url;
+}
+
+function toggleQR() {
+  const p = document.getElementById('qr-panel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function printQR() {
+  const url = window.location.href;
+  const qrImg = document.querySelector('#qr-output img');
+  const qrSrc = qrImg ? qrImg.src : '';
+
+  const html = `<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="UTF-8">
+<title>永福國小 115 填報 QR Code</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans TC',sans-serif;background:#fff;
+       display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .poster{width:520px;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15)}
+  .top{background:linear-gradient(135deg,#0f6e56,#1d9e75);padding:28px 32px 22px;color:#fff;text-align:center}
+  .school{font-size:13px;opacity:.85;letter-spacing:3px;margin-bottom:8px}
+  .title{font-size:23px;font-weight:900;line-height:1.35}
+  .mid{padding:28px 32px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;background:#fff}
+  .qf{padding:16px;border:3px solid #0f6e56;border-radius:16px}
+  .qf img{display:block;border-radius:8px}
+  .scan{background:#e1f5ee;border-radius:10px;padding:12px 18px;width:100%;
+        display:flex;align-items:center;gap:12px}
+  .scan h3{font-size:14px;font-weight:700;color:#085041;margin-bottom:2px}
+  .scan p{font-size:11px;color:#1d9e75}
+  .steps{width:100%;display:flex;flex-direction:column;gap:7px}
+  .step{display:flex;align-items:center;gap:10px;font-size:12px;color:#444}
+  .n{width:22px;height:22px;border-radius:50%;background:#0f6e56;color:#fff;
+     font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .urlbox{background:#f7f6f3;border-radius:8px;padding:9px 14px;width:100%;
+          text-align:center;font-size:10px;color:#5f5e5a;word-break:break-all;line-height:1.6}
+  .urlbox strong{color:#0f6e56;font-size:11px;display:block;margin-bottom:2px}
+  .bot{background:#085041;padding:11px 24px;display:flex;justify-content:space-between}
+  .bot span{color:#9fe1cb;font-size:11px}
+  @media print{body{min-height:auto}.poster{box-shadow:none}@page{margin:8mm}}
+</style></head><body>
+<div class="poster">
+  <div class="top">
+    <div class="school">永 福 國 小</div>
+    <div class="title">115 學年度教師課職務<br>志願選填積分系統</div>
+  </div>
+  <div class="mid">
+    <div class="qf">${qrSrc ? '<img src="'+qrSrc+'" width="200" height="200">' : '<div style="width:200px;height:200px;background:#e1f5ee;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#0f6e56;font-size:12px;text-align:center">請重新整理<br>再列印</div>'}</div>
+    <div class="scan">
+      <span style="font-size:26px">📱</span>
+      <div>
+        <h3>手機開啟相機，對準 QR Code 掃描</h3>
+        <p>iOS / Android 原生相機均支援，不需安裝 App</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div>手機開啟相機，鏡頭對準 QR Code</div>
+      <div class="step"><div class="n">2</div>點擊畫面跳出的網址通知</div>
+      <div class="step"><div class="n">3</div>填寫積分資料，送出後即時存入雲端</div>
+    </div>
+    <div class="urlbox">
+      <strong>📎 也可直接在瀏覽器輸入網址</strong>
+      ${url}
+    </div>
+  </div>
+  <div class="bot">
+    <span>積分採計時間：114.5.11 ～ 115.5.10</span>
+    <span>永福國小 115 學年度</span>
+  </div>
+</div>
+<script>window.onload=()=>window.print()<\/script>
+</body></html>`;
+
+  const w = window.open('','_blank');
+  if (!w) { alert('請允許彈出視窗'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+// ─── 初始化（直接呼叫，腳本在 </body> 前，DOM 已就緒）────
+buildDropdowns();
+buildRefTable();
+initFirebase();
+buildQR();
 </script>
 </body>
 </html>

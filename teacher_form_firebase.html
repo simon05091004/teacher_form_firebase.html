@@ -107,6 +107,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
 .submit-btn{width:100%;padding:13px;background:var(--t600);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:1px;transition:background .2s,transform .1s}
 .submit-btn:hover{background:var(--t800)}
 .submit-btn:active{transform:scale(.99)}
+.bottom-bar{position:sticky;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--g200);padding:10px 16px;z-index:40;box-shadow:0 -4px 16px rgba(0,0,0,.08);margin-top:14px}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:all .3s ease;z-index:999;max-width:320px}
@@ -207,10 +208,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
   .wrap{padding:12px 10px 60px}
   .card-bd{padding:14px}
   /* 固定送出按鈕在底部 */
-  .bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;
-    border-top:1px solid var(--g200);padding:10px 16px;z-index:40;
-    box-shadow:0 -4px 16px rgba(0,0,0,.08)}
-  #submit-area{display:none} /* 隱藏原有送出區 */
+
+
 }
 </style>
 </head>
@@ -517,12 +516,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
       </div>
       <div class="breakdown" id="breakdown">請填寫積分項目以計算總分</div>
     </div>
-
-    <div id="submit-area">
-    <button class="submit-btn" onclick="submitForm()">✉ 送出填報</button>
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px">
-      <div id="cloud-dot" style="width:8px;height:8px;border-radius:50%;background:var(--g200)"></div>
-      <p style="font-size:12px;color:var(--g400)" id="cloud-status">送出後資料儲存至雲端，由審核委員進行複評</p>
+<p style="font-size:12px;color:var(--g400)" id="cloud-status">送出後資料儲存至雲端，由審核委員進行複評</p>
     </div>
     </div>
 
@@ -690,17 +684,14 @@ function initFirebase() {
 }
 
 function updateCloudBadge(ok) {
-  const dot = document.getElementById('cloud-dot');
-  const txt = document.getElementById('cloud-status');
-  const mdot = document.getElementById('mb-dot');
-  const mtxt = document.getElementById('mb-status');
-  const set = (d, t, color, msg) => { if(d) d.style.background=color; if(t) t.textContent=msg; };
+  const dot = document.getElementById('mb-dot');
+  const txt = document.getElementById('mb-status');
   if (ok) {
-    set(dot, txt, '#1d9e75', '✓ 已連接 Firebase 雲端資料庫');
-    set(mdot, mtxt, '#1d9e75', '✓ 雲端連線中');
+    if(dot) dot.style.background='#1d9e75';
+    if(txt) txt.textContent='✓ 已連接 Firebase 雲端資料庫';
   } else {
-    set(dot, txt, '#e24b4a', '⚠ 未連接雲端（請確認 Firebase 設定）');
-    set(mdot, mtxt, '#e24b4a', '⚠ 未連接雲端');
+    if(dot) dot.style.background='#e24b4a';
+    if(txt) txt.textContent='⚠ 未連接雲端（請確認 Firebase 設定）';
   }
 }
 
@@ -1111,8 +1102,8 @@ async function submitForm() {
   };
 
   // Cloud save with UI feedback
-  const dot = document.getElementById('cloud-dot');
-  const statusEl = document.getElementById('cloud-status');
+  const dot = document.getElementById('mb-dot');
+  const statusEl = document.getElementById('mb-status');
   dot.style.background = '#ba7517';
   statusEl.textContent = '儲存中…';
 

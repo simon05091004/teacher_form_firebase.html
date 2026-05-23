@@ -229,11 +229,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
   </div>
 </div>
 
-<!-- Firebase 設定提示 Banner -->
-<div id="setup-banner" style="background:#faeeda;border-bottom:1px solid #ef9f27;padding:10px 20px;text-align:center;font-size:13px;color:#633806;display:none">
-  ⚠ <strong>尚未設定 Firebase</strong>：請開啟 HTML 原始碼，在 <code>FIREBASE_CONFIG</code> 區填入你的 Firebase 專案設定，再重新上傳。
-  <a href="https://console.firebase.google.com/" target="_blank" style="color:#185fa5;margin-left:8px">→ 前往 Firebase Console</a>
-</div>
 
 <!-- Header -->
 <div id="app-header">
@@ -665,9 +660,8 @@ let _db = null;
 let _fbReady = false;
 
 function initFirebase() {
-  // 偵測是否仍為預設佔位設定
+  // 若 apiKey 尚未設定則僅顯示未連線狀態
   if (FIREBASE_CONFIG.apiKey.startsWith('貼上')) {
-    document.getElementById('setup-banner').style.display = 'block';
     updateCloudBadge(false);
     return;
   }

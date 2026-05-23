@@ -1302,30 +1302,7 @@ async function renderAdmin() {
         </div>
 
         <!-- 初審 / 複審 -->
-        <div class="reviewer-row">
-          <div class="reviewer-box ${s.r1 ? 'locked' : ''}">
-            <div class="reviewer-label">
-              初審
-              <span class="badge ${s.r1 ? 'done' : ''}">${s.r1 ? '✓ 已鎖定' : '待填寫'}</span>
-            </div>
-            ${s.r1
-              ? `<div class="reviewer-locked-name">👤 ${s.r1}</div><div class="reviewer-locked-hint">已鎖定，無法更改</div>`
-              : `<input class="reviewer-input" id="r1-${s.id}" type="text" placeholder="初審者姓名" maxlength="10">
-                 <button class="reviewer-save" onclick="saveReviewer(${s.id},'r1')">確認儲存</button>`
-            }
-          </div>
-          <div class="reviewer-box ${s.r2 ? 'locked' : ''}">
-            <div class="reviewer-label">
-              複審
-              <span class="badge ${s.r2 ? 'done' : ''}">${s.r2 ? '✓ 已鎖定' : '待填寫'}</span>
-            </div>
-            ${s.r2
-              ? `<div class="reviewer-locked-name">👤 ${s.r2}</div><div class="reviewer-locked-hint">已鎖定，無法更改</div>`
-              : `<input class="reviewer-input" id="r2-${s.id}" type="text" placeholder="複審者姓名" maxlength="10">
-                 <button class="reviewer-save" onclick="saveReviewer(${s.id},'r2')">確認儲存</button>`
-            }
-          </div>
-        </div>
+        ${reviewerHTML(s)}
 
         <!-- 審核備註 -->
         ${s.reviewNote ? `<div class="note-display" style="display:block">💬 審核備註：${s.reviewNote}</div>` : ''}
@@ -1356,6 +1333,28 @@ function toggleDetail(id, hd) {
 
 function toggleNote(id) {
   document.getElementById('note-' + id).classList.toggle('open');
+}
+
+function reviewerBox(s, field, label) {
+  var id   = s.id;
+  var val  = s[field] || '';
+  var locked = val ? 'locked' : '';
+  var badge  = val ? '<span class="badge done">✓ 已鎖定</span>' : '<span class="badge">待填寫</span>';
+  var inner  = val
+    ? '<div class="reviewer-locked-name">👤 ' + val + '</div><div class="reviewer-locked-hint">已鎖定，無法更改</div>'
+    : '<input class="reviewer-input" id="' + field + '-' + id + '" type="text" placeholder="' + label + '者姓名" maxlength="10">'
+      + '<button class="reviewer-save" onclick="saveReviewer(' + id + ','' + field + '')">確認儲存</button>';
+  return '<div class="reviewer-box ' + locked + '">'
+       +   '<div class="reviewer-label">' + label + badge + '</div>'
+       +   inner
+       + '</div>';
+}
+
+function reviewerHTML(s) {
+  return '<div class="reviewer-row">'
+       + reviewerBox(s, 'r1', '初審')
+       + reviewerBox(s, 'r2', '複審')
+       + '</div>';
 }
 
 async function saveReviewer(id, field) {

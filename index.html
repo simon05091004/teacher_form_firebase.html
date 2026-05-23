@@ -177,6 +177,20 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f0f2f5;color:var(--g800);
 .btn-del:hover{background:var(--r400);color:#fff}
 .btn-ok{background:var(--t400);color:#fff}
 .btn-ok:hover{background:var(--t600)}
+.reviewer-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;margin-top:10px}
+.reviewer-box{background:#fff;border:1px solid var(--g200);border-radius:9px;padding:10px 12px}
+.reviewer-box.locked{background:var(--t50);border-color:var(--t200)}
+.reviewer-label{font-size:11px;font-weight:700;color:var(--g600);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.reviewer-label .badge{font-size:10px;padding:1px 7px;border-radius:10px;background:var(--b50);color:var(--b600)}
+.reviewer-label .badge.done{background:var(--t50);color:var(--t600)}
+.reviewer-input{width:100%;border:1px solid var(--g200);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;background:#fff;transition:border-color .2s}
+.reviewer-input:focus{outline:none;border-color:var(--t400);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.reviewer-input:disabled{background:var(--t50);color:var(--t800);border-color:var(--t200);cursor:not-allowed;font-weight:600}
+.reviewer-save{margin-top:6px;padding:5px 14px;border:none;border-radius:6px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--t400);color:#fff;transition:all .2s}
+.reviewer-save:hover{background:var(--t600)}
+.reviewer-save:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
+.reviewer-locked-name{font-size:14px;font-weight:700;color:var(--t800);margin-top:4px}
+.reviewer-locked-hint{font-size:10px;color:var(--t600);margin-top:2px}
 .empty-state{text-align:center;padding:48px 24px;color:var(--g400)}
 .empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
 
@@ -1287,6 +1301,9 @@ async function renderAdmin() {
           ).join('')}
         </div>
 
+        <!-- 初審 / 複審 -->
+        ${reviewerHTML(s)}
+
         <!-- 審核備註 -->
         ${s.reviewNote ? `<div class="note-display" style="display:block">💬 審核備註：${s.reviewNote}</div>` : ''}
         <textarea class="note-area" id="note-${s.id}" placeholder="輸入審核備註（選填）…">${s.reviewNote||''}</textarea>
@@ -1318,6 +1335,53 @@ function toggleNote(id) {
   document.getElementById('note-' + id).classList.toggle('open');
 }
 
+function reviewerBox(s, field, label) {
+  var id   = s.id;
+  var val  = s[field] || '';
+  var locked = val ? 'locked' : '';
+  var badge  = val ? '<span class="badge done">✓ 已鎖定</span>' : '<span class="badge">待填寫</span>';
+  var inner  = val
+    ? '<div class="reviewer-locked-name">👤 ' + val + '</div><div class="reviewer-locked-hint">已鎖定，無法更改</div>'
+    : '<input class="reviewer-input" id="' + field + '-' + id + '" type="text" placeholder="' + label + '者姓名" maxlength="10">'
+      + '<button class="reviewer-save" onclick="saveReviewer(' + id + ','' + field + '')">確認儲存</button>';
+  return '<div class="reviewer-box ' + locked + '">'
+       +   '<div class="reviewer-label">' + label + badge + '</div>'
+       +   inner
+       + '</div>';
+}
+
+function reviewerHTML(s) {
+  return '<div class="reviewer-row">'
+       + reviewerBox(s, 'r1', '初審')
+       + reviewerBox(s, 'r2', '複審')
+       + '</div>';
+}
+
+async function saveReviewer(id, field) {
+  // field: 'r1' (初審) 或 'r2' (複審)
+  const inputEl = document.getElementById(field + '-' + id);
+  if (!inputEl) return;
+  const name = inputEl.value.trim();
+  if (!name) { alert('請輸入' + (field==='r1' ? '初審' : '複審') + '者姓名'); return; }
+  if (!confirm('確認以「' + name + '」儲存為' + (field==='r1' ? '初審' : '複審') + '者？
+儲存後無法修改。')) return;
+
+  // 先確認資料庫中該欄位尚未填寫（防止 race condition）
+  const subs = await sGet();
+  const rec  = subs.find(s => s.id === id);
+  if (!rec) return;
+  if (rec[field]) {
+    alert('此欄位已有人填寫，無法再修改。');
+    renderAdmin();
+    return;
+  }
+
+  const patch = {};
+  patch[field] = name;
+  await sUpdate(id, patch);
+  renderAdmin();
+}
+
 async function approve(id) {
   const subs = await sGet();
   const rec = subs.find(s => s.id === id);
@@ -1339,14 +1403,14 @@ async function exportCSV() {
   const subs = await sGet();
 
   const header = [
-    '姓名','現任職務','第一志願','第二志願','第三志願',
+    '姓名','現任職務','第一志願','第二志願','第三志願','初審','複審',
     '成為正式教師學年','退休年資(年)','到本校任職學年','本校年資(年)',
     '職務一','職務一加分','職務二','職務二加分','職務三','職務三加分',
     '職務四','職務四加分','職務五','職務五加分','職務六','職務六加分',
     '獎勵分','職務加分','研習分','總積分','狀態','審核備註','填報時間'
   ];
   const rows = subs.map(s => [
-    s.name, s.role, s.p1, s.p2, s.p3,
+    s.name, s.role, s.p1, s.p2, s.p3, s.r1||'', s.r2||'',
     s.fy, s.ry, s.jy, s.sy,
     s.d1, s.dp1, s.d2, s.dp2, s.d3, s.dp3,
     s.d4||'', s.dp4||0, s.d5||'', s.dp5||0, s.d6||'', s.dp6||0,
